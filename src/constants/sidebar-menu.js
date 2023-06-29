@@ -6,27 +6,27 @@ import UserIcon from "../assets/icons/user.svg";
 const sidebar_menu = [
   {
     id: 1,
-    icon: DashboardIcon,
+    // icon: DashboardIcon,
     path: "/",
-    title: "Dashboard",
+    title: "Trang chủ",
   },
   {
     id: 2,
-    icon: ProductIcon,
-    path: "/orders",
-    title: "Orders",
+    // icon: DashboardIcon,
+    path: "/hotels",
+    title: "Quản lý khách sạn",
   },
   {
     id: 3,
-    icon: ShippingIcon,
-    path: "/products",
-    title: "Products",
+    // icon: <i className="bx bx-bed"></i>,
+    path: "/roomList",
+    title: "Quản lý phòng",
   },
   {
     id: 4,
-    icon: UserIcon,
+    // icon: <i className="bx bx-file"></i>,
     path: "/profile",
-    title: "My account",
+    title: "Quản lý đơn đặt",
   },
 ];
 

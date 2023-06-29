@@ -34,8 +34,8 @@ import { addListproduct } from "../redux/productSlice";
 import { logout } from "../redux/userSlice";
 import Widget from "../components/Widget";
 import Chart from "../components/Chart";
-import Sidebar from "../components/sidebar";
-import styles from "../css/Sidebar.module.css";
+import SideBar from "../components/Sidebar";
+import sidebar_menu from "../constants/sidebar-menu";
 
 export default function HomePage() {
   // const [first, setfirst] = useState(second);
@@ -177,7 +177,7 @@ export default function HomePage() {
             </div>
           </div>
         </div> */}
-        <Sidebar />
+        <SideBar menu={sidebar_menu} />
       </div>
 
       <div className="col-sm-10" style={{ padding: 0 }}>

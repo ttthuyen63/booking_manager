@@ -24,7 +24,8 @@ import { logout } from "../redux/userSlice";
 import { useMemo } from "react";
 import moment from "moment";
 import { currencyFormat } from "../ultils/constant";
-import Sidebar from "../components/sidebar";
+import SideBar from "../components/Sidebar";
+import sidebar_menu from "../constants/sidebar-menu";
 
 export default function RoomListPage() {
   const [roomState, setroomState] = useState(null);
@@ -214,112 +215,7 @@ export default function RoomListPage() {
       )}
       <div className="row">
         <div className="col-sm-3" style={{ padding: 0 }}>
-          {/* <div className="menu">
-            <h4 className="menu-header">KMA Booking</h4>
-            <div className="d-flex align-items-start">
-              <div className="nav flex-column nav-pills">
-                <Link
-                  className="nav-link"
-                  type="button"
-                  to="/"
-                  style={{ color: "white" }}
-                >
-                  <FontAwesomeIcon icon={faHome} /> Trang chủ
-                </Link>
-
-                <div
-                  className="dropdown product nav-link"
-                  style={{ color: "white" }}
-                >
-                  <div
-                    className="dropdown-btn"
-                    onClick={(e) => setisActiveProduct(!isActiveProduct)}
-                  >
-                    <FontAwesomeIcon icon={faFileCirclePlus} /> Quản lý phòng
-                    <FontAwesomeIcon
-                      icon={faCaretDown}
-                      style={{ paddingLeft: "10px" }}
-                    />
-                  </div>
-                  {!isActiveProduct && (
-                    <div className="dropdown-content">
-                      <div className="dropdown-item">
-                        <Link
-                          className="nav-link active"
-                          type="button"
-                          to="/productList"
-                          style={{ color: "white", textDecoration: "none" }}
-                        >
-                          Tất cả phòng
-                        </Link>
-                      </div>
-                      <div className="dropdown-item">
-                        <Link
-                          className="nav-link"
-                          type="button"
-                          to="/addProduct"
-                          style={{ color: "white", textDecoration: "none" }}
-                        >
-                          Thêm phòng
-                        </Link>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div
-                  className="dropdown order nav-link"
-                  style={{ color: "white" }}
-                >
-                  <div
-                    className="dropdown-btn"
-                    onClick={(e) => setisActiveOrder(!isActiveOrder)}
-                  >
-                    <FontAwesomeIcon icon={faBoxesPacking} /> Quản lý đơn đặt
-                    <FontAwesomeIcon
-                      icon={faCaretDown}
-                      style={{ paddingLeft: "10px" }}
-                    />
-                  </div>
-                  {isActiveOrder && (
-                    <div className="dropdown-content">
-                      <div className="dropdown-item">
-                        <Link
-                          className="nav-link"
-                          type="button"
-                          to="/orderList"
-                          style={{ color: "white", textDecoration: "none" }}
-                        >
-                          Tất cả đơn đặt
-                        </Link>
-                      </div>
-                      <div className="dropdown-item">
-                        <Link
-                          className="nav-link"
-                          type="button"
-                          to="/successDeliver"
-                          style={{ color: "white", textDecoration: "none" }}
-                        >
-                          Đơn đặt thành công
-                        </Link>
-                      </div>
-                      <div className="dropdown-item">
-                        <Link
-                          className="nav-link"
-                          type="button"
-                          to="/deliveringBill"
-                          style={{ color: "white", textDecoration: "none" }}
-                        >
-                          Đơn hàng chờ duyệt
-                        </Link>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div> */}
-          <Sidebar />
+          <SideBar menu={sidebar_menu} />
         </div>
 
         <div className="col-sm-9" style={{ padding: 0 }}>
@@ -335,9 +231,6 @@ export default function RoomListPage() {
                   Thoát
                 </Button>
               </h5>
-              {/* <h4 className="ml-0 mt-0" style={{ color: "black" }}>
-                Tất cả sản phẩm
-              </h4> */}
             </div>
 
             <div className="control-product">
