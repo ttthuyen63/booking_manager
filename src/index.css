@@ -4,10 +4,10 @@ body {
 }
 
 .col-sm-3 {
-  padding: 0px;
+  padding: 10px;
 }
 .col-sm-9 {
-  padding: 0px;
+  padding: 10px;
 }
 .menu {
   width: 100%;
@@ -167,8 +167,20 @@ table.dataTable thead .sorting_desc_disabled:before {
 .w-30 {
   width: 300px;
 }
+
+.custom-select {
+  width: 80%;
+  margin-top: 10px;
+  padding: 5px;
+  border-radius: 0.375rem;
+}
+
 .form-inline {
-  position: relative;
+  /* position: relative; */
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  width: 36%;
 }
 .mg-right {
   position: absolute;
@@ -394,4 +406,109 @@ tr:hover {
 
 i {
   text-decoration: none;
+}
+
+.btn-new-room {
+  margin-left: 20px;
+  padding: 0.8em;
+  padding-left: 2em;
+  padding-right: 2em;
+  cursor: pointer;
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 8px;
+  text-transform: uppercase;
+  border: 1px solid #015c92;
+  background-color: #015c92;
+  text-decoration: none;
+}
+
+.btn-new-room:hover {
+  color: #015c92;
+  border: 1px solid #015c92;
+  background-color: #f0f2f5;
+}
+
+.item-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.item-header h2 {
+  margin-top: auto;
+  margin-bottom: auto;
+  color: black;
+  font-size: xx-large;
+  font-weight: 700;
+}
+
+.item-search {
+  font-weight: 400;
+  line-height: 1.4em;
+  letter-spacing: 0.009em;
+  box-sizing: border-box;
+  cursor: text;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  position: relative;
+  background-color: transparent;
+  font-size: 0.875rem;
+  border-radius: 0.375rem;
+  border: 1px solid gray;
+  width: 36%;
+}
+
+.item-search:focus {
+  outline: #2d83b5 auto 1px;
+}
+
+.item-search-input {
+  font-style: inherit;
+  font-variant: inherit;
+  font-weight: inherit;
+  font-stretch: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  letter-spacing: inherit;
+  border: 0px;
+  box-sizing: content-box;
+  background: none transparent;
+  margin: 0px;
+  display: block;
+  min-width: 0px;
+  width: 100%;
+  color: #000000;
+  font-size: 0.75rem;
+  padding: 0.625rem;
+}
+
+.begin-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+th {
+  text-align: left;
+  padding: 12px 24px;
+  background: transparent;
+  box-shadow: none;
+  color: #2d83b5;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.035em;
+  border-bottom: 0.05rem solid rgb(240, 242, 245);
+}
+
+table {
+  width: 100%;
+  margin: auto;
+}
+
+tbody {
+  display: table-row-group;
 }

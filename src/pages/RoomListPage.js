@@ -18,7 +18,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { customAxios } from "../config/api";
-import { addListproduct } from "../redux/productSlice";
+import { addListroom } from "../redux/roomSlice";
 import HomePage from "./homePage";
 import { logout } from "../redux/userSlice";
 import { useMemo } from "react";
@@ -26,6 +26,8 @@ import moment from "moment";
 import { currencyFormat } from "../ultils/constant";
 import SideBar from "../components/Sidebar";
 import sidebar_menu from "../constants/sidebar-menu";
+// import { Select } from "@mui/material";
+import Select from "react-select";
 
 export default function RoomListPage() {
   const [roomState, setroomState] = useState(null);
@@ -33,24 +35,24 @@ export default function RoomListPage() {
   const [search, setSearch] = useState(roomState);
   const [deleteId, setdeleteId] = useState("");
   const [deleteCode, setdeleteCode] = useState("");
-  const [filterproduct, setfilterproduct] = useState();
+  const [filterroom, setfilterroom] = useState();
   const [showDel, setshowDel] = useState(false);
-  const [isActiveProduct, setisActiveProduct] = useState(false);
+  const [isActiveroom, setisActiveroom] = useState(false);
   const [isActiveOrder, setisActiveOrder] = useState(false);
-  const [imageproductData1, setImageproductData1] = useState();
+  const [imageroomData1, setImageroomData1] = useState();
 
   console.log("roomState...", roomState);
-  const productList = useSelector((state) => state.productReducer);
+  const roomList = useSelector((state) => state.roomReducer);
 
   const queryParams = new URLSearchParams(window.location.search);
   const dispatch = useDispatch();
   useEffect(() => {
-    getproductApi();
+    getroomApi();
   }, []);
-  const getproductApi = async () => {
+  const getroomApi = async () => {
     try {
       const res = await customAxios.get("/room");
-      dispatch(addListproduct(res.data));
+      dispatch(addListroom(res.data));
       setroomState(res?.data);
     } catch (error) {
       console.log("Lỗi", error);
@@ -92,7 +94,7 @@ export default function RoomListPage() {
   console.log("data....", filterData(roomState));
   const handleEdit = (item) => {
     console.log("item...", item);
-    navigate("/editproduct/" + item?.code, {
+    navigate("/editroom/" + item?.code, {
       state: item,
     });
   };
@@ -113,18 +115,18 @@ export default function RoomListPage() {
     // console.log("id: ", deleteId);
     try {
       await customAxios.post(`/admin/item/delete/${deleteCode}`);
-      getproductApi();
+      getroomApi();
     } catch (error) {
       console.log("Lỗi", error);
     }
     setshowDel(false);
   };
   // const goToDetail = (code) => {
-  //   navigate("/productList/" + code);
+  //   navigate("/roomList/" + code);
   // };
 
   const goToDetail = () => {
-    navigate("/productDetail");
+    navigate("/roomDetail");
   };
 
   const handleChangeSearch = (e) => {
@@ -137,20 +139,17 @@ export default function RoomListPage() {
     setShow(true);
   };
   function getFilterList() {
-    if (!filterproduct) {
+    if (!filterroom) {
       return filterData(roomState);
     }
     return filterData(roomState)?.filter(
-      (item) => item.categoryCode === filterproduct
+      (item) => item.categoryCode === filterroom
     );
   }
 
-  var filterList = useMemo(getFilterList, [
-    filterproduct,
-    filterData(roomState),
-  ]);
+  var filterList = useMemo(getFilterList, [filterroom, filterData(roomState)]);
   function handleChange(event) {
-    setfilterproduct(event.target.value);
+    setfilterroom(event.target.value);
   }
 
   const navigate = useNavigate();
@@ -233,62 +232,53 @@ export default function RoomListPage() {
               </h5>
             </div>
 
-            <div className="control-product">
-              <div className="mt-3 control-product-table shadow-sm p-3 mb-5 bg-white rounded">
-                <h4
-                  className="ml-0 mt-0"
-                  style={{ color: "black", textAlign: "center" }}
+            <div className="begin-item">
+              <Link className="btn-new-room" type="button" to="/addroom">
+                TẠO PHÒNG MỚI
+              </Link>
+              <form className="form-inline w-50">
+                <select
+                  className="browser-default custom-select mb-2 mr-3"
+                  // value={filterStatus}
+                  onChange={handleChange}
                 >
-                  Tất cả phòng
-                </h4>
-
-                <form className="form-inline w-100">
-                  <input
-                    type="text"
-                    className="input-userCode form-control w-30 mb-2 mr-3"
-                    placeholder="Tìm kiếm theo tên/mã phòng"
-                    onChange={handleChangeSearch}
-                  />
-                  <select
-                    className="browser-default custom-select w-30 mb-2 mr-3"
-                    // value={filterStatus}
-                    onChange={handleChange}
-                  >
-                    <option selected disabled>
+                  {/* <option selected disabled>
                       Lọc theo danh mục
-                    </option>
-                    <option value="">Tất cả</option>
-                    {/* {filterData(roomState)?.map((item) => (
+                    </option> */}
+                  <option value="">Tất cả</option>
+                  {/* {filterData(roomState)?.map((item) => (
                       <option value={item?.categoryCode}>
                         {item?.categoryCode}
                       </option>
                     ))}
                        */}
-                    <option value="trang-phuc_bong-da">Phòng đơn</option>
-                    <option value="trang-phuc_bong-chuyen">Phòng đôi</option>
-                  </select>
-                  <Link
-                    className="btn btn-success mb-2 mr-3 mg-right"
-                    type="button"
-                    to="/addproduct"
-                  >
-                    <FontAwesomeIcon icon={faPlusCircle} /> Thêm
-                  </Link>
-                </form>
-
+                  <option value="trang-phuc_bong-da">Phòng đơn</option>
+                  <option value="trang-phuc_bong-chuyen">Phòng đôi</option>
+                </select>
+              </form>
+            </div>
+            <div className="control-room">
+              <div className="mt-3 control-room-table shadow-sm p-3 mb-5 bg-white rounded">
+                <div className="item-header">
+                  <h2>Danh sách các phòng</h2>
+                  <div className="item-search">
+                    <input
+                      type="text"
+                      className="item-search-input"
+                      placeholder="Tìm kiếm theo tên/mã phòng"
+                      onChange={handleChangeSearch}
+                    />
+                  </div>
+                </div>
                 <table className="table recently-violated">
                   <thead>
                     <tr>
-                      {/* <th scope="col">ID</th> */}
-
-                      {/* <th scope="col">Mã phân loại</th> */}
                       <th scope="col">Mã phòng</th>
                       <th scope="col">Tên phòng</th>
                       <th scope="col">Phân loại</th>
                       <th scope="col">Giá</th>
                       <th scope="col">Số lượng</th>
                       <th scope="col">Trạng thái</th>
-                      {/* <th scope="col">Xem thêm</th> */}
                       <th scope="col">Chỉnh sửa</th>
                       <th scope="col">Xóa</th>
                       <th scope="col">Vô hiệu hóa</th>

@@ -30,7 +30,7 @@ import { useDispatch } from "react-redux";
 import { customAxios } from "../config/api";
 import { addListBook } from "../redux/orderSlice";
 import { useState } from "react";
-import { addListproduct } from "../redux/productSlice";
+import { addListproduct } from "../redux/roomSlice";
 import { logout } from "../redux/userSlice";
 import Widget from "../components/Widget";
 import Chart from "../components/Chart";
