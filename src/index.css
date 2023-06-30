@@ -408,7 +408,7 @@ i {
   text-decoration: none;
 }
 
-.btn-new-room {
+.btn-new {
   margin-left: 20px;
   padding: 0.8em;
   padding-left: 2em;
@@ -424,7 +424,7 @@ i {
   text-decoration: none;
 }
 
-.btn-new-room:hover {
+.btn-new:hover {
   color: #015c92;
   border: 1px solid #015c92;
   background-color: #f0f2f5;

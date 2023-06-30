@@ -15,6 +15,7 @@ import ProductDetail from "./pages/roomDetail";
 import RoomListPage from "./pages/RoomListPage";
 import AddRoomPage from "./pages/AddRoomPage";
 import EditRoomPage from "./pages/EditRoomPage";
+import HotelListPage from "./pages/HotelListPage";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectRouter>
         <RoomListPage />
+      </ProtectRouter>
+    ),
+  },
+  {
+    path: "/hotelList",
+    element: (
+      <ProtectRouter>
+        <HotelListPage />
       </ProtectRouter>
     ),
   },

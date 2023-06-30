@@ -58,40 +58,9 @@ export default function RoomListPage() {
       console.log("Lỗi", error);
     }
   };
+
   console.log("test", roomState);
 
-  const filterData = (props) => {
-    props?.forEach((currentValue, index, arr) => {
-      let code = currentValue.code;
-
-      let objIndex = arr.findIndex((item) => {
-        return item.code == code;
-      });
-      if (index == objIndex) {
-        currentValue.color = [currentValue.color];
-        currentValue.size = [currentValue.size];
-        currentValue.quantity = [currentValue.quantity];
-      } else {
-        if (!arr[objIndex].color.includes(currentValue.color)) {
-          arr[objIndex].color = [...arr[objIndex].color, currentValue.color];
-        }
-        if (!arr[objIndex].size.includes(currentValue.size)) {
-          arr[objIndex].size = [...arr[objIndex].size, currentValue.size];
-        }
-
-        if (!arr[objIndex].quantity.includes(currentValue.quantity)) {
-          arr[objIndex].quantity = [
-            ...arr[objIndex].quantity,
-            currentValue.quantity,
-          ];
-        }
-        currentValue.code = null;
-      }
-    });
-    return props?.filter((e) => e.code !== null);
-  };
-
-  console.log("data....", filterData(roomState));
   const handleEdit = (item) => {
     console.log("item...", item);
     navigate("/editroom/" + item?.code, {
@@ -131,23 +100,21 @@ export default function RoomListPage() {
 
   const handleChangeSearch = (e) => {
     const query = e.target.value;
-    var searchList = [...filterData(roomState)];
+    var searchList = [...roomState];
     searchList = searchList?.filter((item) => {
-      return item?.name.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+      return item?.room_name?.toLowerCase().indexOf(query.toLowerCase()) !== -1;
     });
     setSearch(searchList);
     setShow(true);
   };
   function getFilterList() {
     if (!filterroom) {
-      return filterData(roomState);
+      return roomState;
     }
-    return filterData(roomState)?.filter(
-      (item) => item.categoryCode === filterroom
-    );
+    return roomState?.filter((item) => item?.hotel_id === filterroom);
   }
 
-  var filterList = useMemo(getFilterList, [filterroom, filterData(roomState)]);
+  var filterList = useMemo(getFilterList, [filterroom, roomState]);
   function handleChange(event) {
     setfilterroom(event.target.value);
   }
@@ -233,8 +200,8 @@ export default function RoomListPage() {
             </div>
 
             <div className="begin-item">
-              <Link className="btn-new-room" type="button" to="/addroom">
-                TẠO PHÒNG MỚI
+              <Link className="btn-new" type="button" to="/addroom">
+                THÊM PHÒNG
               </Link>
               <form className="form-inline w-50">
                 <select
@@ -246,7 +213,7 @@ export default function RoomListPage() {
                       Lọc theo danh mục
                     </option> */}
                   <option value="">Tất cả</option>
-                  {/* {filterData(roomState)?.map((item) => (
+                  {/* {(roomState)?.map((item) => (
                       <option value={item?.categoryCode}>
                         {item?.categoryCode}
                       </option>
@@ -285,11 +252,9 @@ export default function RoomListPage() {
                       <th scope="col">Kích hoạt</th>
                     </tr>
                   </thead>
-                  <tbody id="myTable">
+                  {/* <tbody id="myTable">
                     <tr>
-                      {/* <td>{item.id}</td> */}
 
-                      {/* <td>{item.image}</td> */}
                       <td>P01</td>
                       <td onClick={() => goToDetail()}>Phòng Upper Deluxe</td>
                       <td>Phòng đơn</td>
@@ -304,14 +269,7 @@ export default function RoomListPage() {
                         >
                           <FontAwesomeIcon icon={faCheckCircle} color="green" />
                         </span>
-                        {/* <span
-                          className={{
-                            dataToggle: Tooltip,
-                            title: "Chỉnh sửa",
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faTimesCircle} color="Red" />
-                        </span> */}
+                       
                       </td>
                       <td>
                         <button
@@ -320,7 +278,6 @@ export default function RoomListPage() {
                           data-toggle="modal"
                           data-target="#editModal"
                           variant="primary"
-                          // onClick={() => handleEdit(item)}
                         >
                           <span
                             className={{
@@ -335,7 +292,6 @@ export default function RoomListPage() {
 
                       <td>
                         <button
-                          // onClick={() => handleClickDelete(item?.code)}
                           type="button"
                           className="btn btn-danger btn-xs"
                           data-toggle="modal"
@@ -354,7 +310,6 @@ export default function RoomListPage() {
 
                       <td>
                         <button
-                          // onClick={() => handleClickDelete(item?.code)}
                           type="button"
                           className="btn btn-warning btn-xs"
                           data-toggle="modal"
@@ -373,7 +328,6 @@ export default function RoomListPage() {
 
                       <td>
                         <button
-                          // onClick={() => handleClickDelete(item?.code)}
                           type="button"
                           className="btn btn-success btn-xs"
                           data-toggle="modal"
@@ -390,241 +344,19 @@ export default function RoomListPage() {
                         </button>
                       </td>
                     </tr>
-                  </tbody>
-
-                  <tbody id="myTable">
-                    <tr>
-                      {/* <td>{item.id}</td> */}
-
-                      {/* <td>{item.image}</td> */}
-                      <td>P02</td>
-                      <td>Phòng Family Suite</td>
-                      <td>Phòng đôi</td>
-                      <td>{currencyFormat(1500000)}</td>
-                      <td>2</td>
-                      <td>
-                        <span
-                          className={{
-                            dataToggle: Tooltip,
-                            title: "Chỉnh sửa",
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faCheckCircle} color="green" />
-                        </span>
-                        {/* <span
-                          className={{
-                            dataToggle: Tooltip,
-                            title: "Chỉnh sửa",
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faTimesCircle} color="Red" />
-                        </span> */}
-                      </td>
-                      <td>
-                        <button
-                          type="button"
-                          className="btn btn-secondary btn-xs"
-                          data-toggle="modal"
-                          data-target="#editModal"
-                          variant="primary"
-                          // onClick={() => handleEdit(item)}
-                        >
-                          <span
-                            className={{
-                              dataToggle: Tooltip,
-                              title: "Chỉnh sửa",
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faPencilSquare} /> Sửa
-                          </span>
-                        </button>
-                      </td>
-
-                      <td>
-                        <button
-                          // onClick={() => handleClickDelete(item?.code)}
-                          type="button"
-                          className="btn btn-danger btn-xs"
-                          data-toggle="modal"
-                          data-target="#delModal"
-                        >
-                          <span
-                            className={{
-                              dataToggle: Tooltip,
-                              title: "Xóa",
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faTrash} /> Xóa
-                          </span>
-                        </button>
-                      </td>
-
-                      <td>
-                        <button
-                          // onClick={() => handleClickDelete(item?.code)}
-                          type="button"
-                          className="btn btn-warning btn-xs"
-                          data-toggle="modal"
-                          data-target="#delModal"
-                        >
-                          <span
-                            className={{
-                              dataToggle: Tooltip,
-                              title: "Xóa",
-                            }}
-                          >
-                            Disable
-                          </span>
-                        </button>
-                      </td>
-
-                      <td>
-                        <button
-                          // onClick={() => handleClickDelete(item?.code)}
-                          type="button"
-                          className="btn btn-success btn-xs"
-                          data-toggle="modal"
-                          data-target="#delModal"
-                        >
-                          <span
-                            className={{
-                              dataToggle: Tooltip,
-                              title: "Xóa",
-                            }}
-                          >
-                            Active
-                          </span>
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-
-                  <tbody id="myTable">
-                    <tr>
-                      {/* <td>{item.id}</td> */}
-
-                      {/* <td>{item.image}</td> */}
-                      <td>P03</td>
-                      <td>Phòng Premium Deluxe</td>
-                      <td>Phòng đơn</td>
-                      <td>{currencyFormat(700000)}</td>
-                      <td>0</td>
-                      <td>
-                        {/* <span
-                          className={{
-                            dataToggle: Tooltip,
-                            title: "Chỉnh sửa",
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faCheckCircle} color="green" />
-                        </span> */}
-                        <span
-                          className={{
-                            dataToggle: Tooltip,
-                            title: "Chỉnh sửa",
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faTimesCircle} color="Red" />
-                        </span>
-                      </td>
-                      <td>
-                        <button
-                          type="button"
-                          className="btn btn-secondary btn-xs"
-                          data-toggle="modal"
-                          data-target="#editModal"
-                          variant="primary"
-                          onClick={() => handleEdit()}
-                          // onClick={() => handleEdit(item)}
-                        >
-                          <span
-                            className={{
-                              dataToggle: Tooltip,
-                              title: "Chỉnh sửa",
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faPencilSquare} /> Sửa
-                          </span>
-                        </button>
-                      </td>
-
-                      <td>
-                        <button
-                          onClick={() => handleClickDelete()}
-                          type="button"
-                          className="btn btn-danger btn-xs"
-                          data-toggle="modal"
-                          data-target="#delModal"
-                        >
-                          <span
-                            className={{
-                              dataToggle: Tooltip,
-                              title: "Xóa",
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faTrash} /> Xóa
-                          </span>
-                        </button>
-                      </td>
-
-                      <td>
-                        <button
-                          // onClick={() => handleClickDelete(item?.code)}
-                          type="button"
-                          className="btn btn-warning btn-xs"
-                          data-toggle="modal"
-                          data-target="#delModal"
-                        >
-                          <span
-                            className={{
-                              dataToggle: Tooltip,
-                              title: "Xóa",
-                            }}
-                          >
-                            Disable
-                          </span>
-                        </button>
-                      </td>
-
-                      <td>
-                        <button
-                          // onClick={() => handleClickDelete(item?.code)}
-                          type="button"
-                          className="btn btn-success btn-xs"
-                          data-toggle="modal"
-                          data-target="#delModal"
-                        >
-                          <span
-                            className={{
-                              dataToggle: Tooltip,
-                              title: "Xóa",
-                            }}
-                          >
-                            Active
-                          </span>
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
+                  </tbody> */}
                   {/* ----------------------------------------- */}
-                  {/* {show === false ? (
+                  {show === false ? (
                     <tbody id="myTable">
                       {filterList?.map((item, index) => (
                         <tr>
-                          <td>
-                            <img
-                              src={item.image[0]}
-                              width={100}
-                              height={120}
-                            ></img>
-                          </td>
-                          <td>{item.name}</td>
-                          <td>{item.categoryCode}</td>
-                          <td>{currencyFormat(item.price)}</td>
-                          <td>{item?.createdDate?.slice(0, 10)}</td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
                           <td>
                             <button
-                              onClick={() => goToDetail(item.code)}
+                              // onClick={() => goToDetail(item.code)}
                               variant="primary"
                               type="button"
                               className="btn btn-primary btn-xs"
@@ -658,7 +390,7 @@ export default function RoomListPage() {
                               </span>
                             </button>
                             <button
-                              onClick={() => handleClickDelete(item?.code)}
+                              // onClick={() => handleClickDelete(item?.code)}
                               type="button"
                               className="btn btn-danger btn-xs"
                               data-toggle="modal"
@@ -685,20 +417,13 @@ export default function RoomListPage() {
                     <tbody id="myTable">
                       {search?.map((item, index) => (
                         <tr>
-                          <td>
-                            <img
-                              src={item.image[0]}
-                              width={80}
-                              height={100}
-                            ></img>
-                          </td>
-                          <td>{item.name}</td>
-                          <td>{item.categoryCode}</td>
-                          <td>{currencyFormat(item.price)}</td>
-                          <td>{item?.createdDate?.slice(0, 10)}</td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
                           <td>
                             <button
-                              onClick={() => goToDetail(item.code)}
+                              // onClick={() => goToDetail(item.code)}
                               variant="primary"
                               type="button"
                               className="btn btn-primary btn-xs"
@@ -732,7 +457,7 @@ export default function RoomListPage() {
                               </span>
                             </button>
                             <button
-                              onClick={() => handleClickDelete(item?.code)}
+                              // onClick={() => handleClickDelete(item?.code)}
                               type="button"
                               className="btn btn-danger btn-xs"
                               data-toggle="modal"
@@ -753,43 +478,8 @@ export default function RoomListPage() {
                     </tbody>
                   ) : (
                     ""
-                  )} */}
+                  )}
                 </table>
-                {/* <!-- Modal xem thêm --> */}
-                <div id="moreModal" className="modal fade" role="dialog">
-                  <div className="modal-dialog">
-                    {/* <!-- Modal content--> */}
-                    <div className="modal-content">
-                      <div className="modal-header">
-                        <h4 className="modal-title">Thông tin chi tiết</h4>
-                        <button
-                          type="button"
-                          className="close"
-                          data-dismiss="modal"
-                        >
-                          &times;
-                        </button>
-                      </div>
-                      <div className="modal-body row">
-                        <div className="col-sm-6 text-center">
-                          <img
-                            className="avatar-wrapper mt-1 mb-1"
-                            src="./OK.jpg"
-                            alt=""
-                          />
-                        </div>
-                        <div className="col-sm-6 mt-2">
-                          <h5>Họ và tên</h5>
-                          <h5>Ngày sinh</h5>
-                          <h5>Giới tính</h5>
-                          <h5>029943598</h5>
-                          <h5>Địa chỉ</h5>
-                          <h5>Trạng thái đọc</h5>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

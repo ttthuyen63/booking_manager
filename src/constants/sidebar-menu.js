@@ -13,7 +13,7 @@ const sidebar_menu = [
   {
     id: 2,
     // icon: DashboardIcon,
-    path: "/hotels",
+    path: "/hotelList",
     title: "Quản lý khách sạn",
   },
   {

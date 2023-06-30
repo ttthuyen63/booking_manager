@@ -7,16 +7,16 @@ const initialState = {
   data: {},
 };
 
-export const addroom = createAsyncThunk("/addroom", async (arg, thunkApi) => {
+export const addhotel = createAsyncThunk("/addhotel", async (arg, thunkApi) => {
   const token = thunkApi.getState().userReducer.token;
   // const res = await customAxios.post(`/orderList.json?auth=${token}`, {
-  const res = await customAxios.post(`/room`, {
-    idRoom: arg.idRoom,
+  const res = await customAxios.post(`/hotel`, {
+    idhotel: arg.idhotel,
     description: arg.description,
     listURL: arg.listURL,
     hotelID: arg.hotelID,
-    roomNumber: arg.roomNumber,
-    roomName: arg.roomName,
+    hotelNumber: arg.hotelNumber,
+    hotelName: arg.hotelName,
     numberBed: arg.numberBed,
     maxQuantity: arg.maxQuantity,
     price: arg.price,
@@ -25,22 +25,22 @@ export const addroom = createAsyncThunk("/addroom", async (arg, thunkApi) => {
   return res.data;
 });
 
-export const getListroom = createAsyncThunk(
-  // "roomList/getList",
-  "/room",
+export const getListhotel = createAsyncThunk(
+  // "hotelList/getList",
+  "/hotel",
   async (arg, thunkApi) => {
     const token = thunkApi.getState().userReducer.token;
-    // const res = await customAxios.get(`/roomList.json?auth=${token}`);
-    const res = await customAxios.get(`/room.json?auth=${token}`);
+    // const res = await customAxios.get(`/hotelList.json?auth=${token}`);
+    const res = await customAxios.get(`/hotel.json?auth=${token}`);
     return res.data;
   }
 );
 
-const roomSlice = createSlice({
-  name: "room",
+const hotelSlice = createSlice({
+  name: "hotel",
   initialState,
   reducers: {
-    addListroom: (state, action) => {
+    addListhotel: (state, action) => {
       // const orders = action.payload;
       // return { ...orders };
     },
@@ -49,35 +49,35 @@ const roomSlice = createSlice({
     builder
 
       //getList
-      .addCase(getListroom.pending, (state, action) => {
+      .addCase(getListhotel.pending, (state, action) => {
         state.loading = true;
         state.error = false;
       })
-      .addCase(getListroom.fulfilled, (state, action) => {
-        const rooms = action.payload;
+      .addCase(getListhotel.fulfilled, (state, action) => {
+        const hotels = action.payload;
         state.loading = false;
-        state.data = rooms;
+        state.data = hotels;
       })
-      .addCase(getListroom.rejected, (state, action) => {
+      .addCase(getListhotel.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
       })
 
-      //add room
-      .addCase(addroom.pending, (state, action) => {
+      //add hotel
+      .addCase(addhotel.pending, (state, action) => {
         state.loading = true;
         state.error = false;
       })
-      .addCase(addroom.fulfilled, (state, action) => {
+      .addCase(addhotel.fulfilled, (state, action) => {
         state.loading = false;
       })
-      .addCase(addroom.rejected, (state, action) => {
+      .addCase(addhotel.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
       });
   },
 });
 
-export const { addListroom } = roomSlice.actions;
-export const selectListroom = (state) => state.roomReducer;
-export default roomSlice.reducer;
+export const { addListhotel } = hotelSlice.actions;
+export const selectListhotel = (state) => state.hotelReducer;
+export default hotelSlice.reducer;
