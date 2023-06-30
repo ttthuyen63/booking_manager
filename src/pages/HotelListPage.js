@@ -10,6 +10,7 @@ import {
   faPencilSquare,
   faPlusCircle,
   faSave,
+  faStar,
   faStickyNote,
   faTimesCircle,
   faTrash,
@@ -28,6 +29,7 @@ import SideBar from "../components/Sidebar";
 import sidebar_menu from "../constants/sidebar-menu";
 // import { Select } from "@mui/material";
 import Select from "react-select";
+import Star from "../components/Star";
 
 export default function HotelListPage() {
   const [hotelState, sethotelState] = useState(null);
@@ -212,14 +214,14 @@ export default function HotelListPage() {
                       Lọc theo danh mục
                     </option> */}
                   <option value="">Tất cả</option>
-                  {/* {(hotelState)?.map((item) => (
-                      <option value={item?.categoryCode}>
-                        {item?.categoryCode}
-                      </option>
-                    ))}
-                       */}
-                  <option value="trang-phuc_bong-da">Phòng đơn</option>
-                  <option value="trang-phuc_bong-chuyen">Phòng đôi</option>
+                  {hotelState?.map((item) => (
+                    <option value={item?.location?.district}>
+                      {item?.location?.district}
+                    </option>
+                  ))}
+
+                  {/* <option value="trang-phuc_bong-da">Phòng đơn</option> */}
+                  {/* <option value="trang-phuc_bong-chuyen">Phòng đôi</option> */}
                 </select>
               </form>
             </div>
@@ -244,7 +246,7 @@ export default function HotelListPage() {
                       <th scope="col">Địa chỉ</th>
                       <th scope="col">Quận/huyện</th>
                       <th scope="col">Thành phố</th>
-                      <th scope="col">Sao</th>
+                      <th scope="col">Đánh giá</th>
                       <th scope="col">Chỉnh sửa</th>
                       <th scope="col">Xóa</th>
                     </tr>
@@ -259,7 +261,16 @@ export default function HotelListPage() {
                           <td>{item?.location?.address}</td>
                           <td>{item?.location?.district}</td>
                           <td>{item?.location?.province}</td>
-                          <td>{item?.start}</td>
+                          <td>
+                            <Star item={item?.start} />
+                            {/* <span>
+                              <FontAwesomeIcon icon={faStar} />
+                              <FontAwesomeIcon icon={faStar} />
+                              <FontAwesomeIcon icon={faStar} />
+                              <FontAwesomeIcon icon={faStar} />
+                              <FontAwesomeIcon icon={faStar} />
+                            </span> */}
+                          </td>
                           {/* <td>
                             <button
                               onClick={() => goToDetail(item.code)}
