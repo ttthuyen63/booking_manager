@@ -16,6 +16,9 @@ import RoomListPage from "./pages/RoomListPage";
 import AddRoomPage from "./pages/AddRoomPage";
 import EditRoomPage from "./pages/EditRoomPage";
 import HotelListPage from "./pages/HotelListPage";
+import EditHotelPage from "./pages/EditHotelPage";
+import AddHotelPage from "./pages/AddHotelPage";
+import OrderPage from "./pages/orderPage";
 
 const router = createBrowserRouter([
   {
@@ -34,12 +37,28 @@ const router = createBrowserRouter([
       </ProtectRouter>
     ),
   },
+  {
+    path: "/addHotel",
+    element: (
+      <ProtectRouter>
+        <AddHotelPage />
+      </ProtectRouter>
+    ),
+  },
 
   {
     path: "/editRoom/:code",
     element: (
       <ProtectRouter>
         <EditRoomPage />
+      </ProtectRouter>
+    ),
+  },
+  {
+    path: "/editHotel/:code",
+    element: (
+      <ProtectRouter>
+        <EditHotelPage />
       </ProtectRouter>
     ),
   },
@@ -60,10 +79,10 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/productDetail",
+    path: "/order",
     element: (
       <ProtectRouter>
-        <ProductDetail />
+        <OrderPage />
       </ProtectRouter>
     ),
   },

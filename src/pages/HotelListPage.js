@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Container, Modal, Tooltip } from "react-bootstrap";
+import { Button, Container, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBoxesPacking,
@@ -30,6 +30,17 @@ import sidebar_menu from "../constants/sidebar-menu";
 // import { Select } from "@mui/material";
 import Select from "react-select";
 import Star from "../components/Star";
+import {
+  Col,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Row,
+  ModalTitle,
+} from "reactstrap";
+import { Uploader } from "uploader";
+import { UploadButton } from "react-uploader";
 
 export default function HotelListPage() {
   const [hotelState, sethotelState] = useState(null);
@@ -42,7 +53,7 @@ export default function HotelListPage() {
   const [isActivehotel, setisActivehotel] = useState(false);
   const [isActiveOrder, setisActiveOrder] = useState(false);
   const [imagehotelData1, setImagehotelData1] = useState();
-
+  const [modal, setmodal] = useState(false);
   console.log("hotelState...", hotelState);
   const hotelList = useSelector((state) => state.hotelReducer);
 
@@ -65,7 +76,7 @@ export default function HotelListPage() {
 
   const handleEdit = (item) => {
     console.log("item...", item);
-    navigate("/edithotel/" + item?.code, {
+    navigate("/edithotel/" + item?.id, {
       state: item,
     });
   };
@@ -122,20 +133,25 @@ export default function HotelListPage() {
 
   const navigate = useNavigate();
 
+  const uploader = new Uploader({
+    // Get production API keys from Upload.io
+    apiKey: "free",
+  });
+
   return (
     <div>
       {show === false ? (
         <div>
           {hotelState?.map((item, index) => (
             <Modal show={showDel} onHide={handleClose}>
-              <Modal.Header closeButton>
-                <Modal.Title>Bạn có chắc là sẽ xóa?</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
+              <ModalHeader closeButton>
+                {/* <div>Bạn có chắc là sẽ xóa?</div> */}
+              </ModalHeader>
+              <ModalBody>
                 Hành động này sẽ xóa dữ liệu vĩnh viễn, bạn hãy chắc chắn là sẽ
                 muốn xóa.
-              </Modal.Body>
-              <Modal.Footer>
+              </ModalBody>
+              <ModalFooter>
                 <Button
                   variant="danger"
                   // onClick={() => handleDelete(item?.id)
@@ -147,7 +163,7 @@ export default function HotelListPage() {
                 <Button variant="primary" onClick={handleClose}>
                   Hủy
                 </Button>
-              </Modal.Footer>
+              </ModalFooter>
             </Modal>
           ))}
         </div>
@@ -155,14 +171,14 @@ export default function HotelListPage() {
         <div>
           {search?.map((item, index) => (
             <Modal show={showDel} onHide={handleClose}>
-              <Modal.Header closeButton>
-                <Modal.Title>Bạn có chắc là sẽ xóa?</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
+              <ModalHeader closeButton>
+                {/* <div>Bạn có chắc là sẽ xóa?</div> */}
+              </ModalHeader>
+              <ModalBody>
                 Hành động này sẽ xóa dữ liệu vĩnh viễn, bạn hãy chắc chắn là sẽ
                 muốn xóa.
-              </Modal.Body>
-              <Modal.Footer>
+              </ModalBody>
+              <ModalFooter>
                 {/* <Button variant="danger" onClick={() => handleDelete(item?.id)}> */}
                 <Button
                   variant="danger"
@@ -175,11 +191,98 @@ export default function HotelListPage() {
                 <Button variant="primary" onClick={handleClose}>
                   Hủy
                 </Button>
-              </Modal.Footer>
+              </ModalFooter>
             </Modal>
           ))}
         </div>
       )}
+      <div>
+        <Modal size="lg" isOpen={modal} toggle={() => setmodal(!modal)}>
+          <ModalHeader toggle={() => setmodal(!modal)}>
+            THÊM KHÁCH SẠN
+          </ModalHeader>
+          <ModalBody>
+            <form>
+              <Row>
+                <Col lg={12}>
+                  <label>Mã khách sạn</label>
+                  <input
+                    // ref={nameRef}
+                    type="text"
+                    className="form-control"
+                    placeholder="Nhập mã khách sạn"
+                  />
+                </Col>
+                <Col lg={12}>
+                  <label>Tên khách sạn</label>
+                  <input
+                    // ref={nameRef}
+                    type="text"
+                    className="form-control"
+                    placeholder="Nhập tên khách sạn"
+                  />
+                </Col>
+                <Col lg={12}>
+                  <label>Địa chỉ</label>
+                  <Row>
+                    <Col lg={4}>
+                      <input
+                        // ref={nameRef}
+                        type="text"
+                        className="form-control"
+                        placeholder="Số nhà"
+                      />
+                    </Col>
+                    <Col lg={4}>
+                      <input
+                        // ref={nameRef}
+                        type="text"
+                        className="form-control"
+                        placeholder="Quận/ Huyện"
+                      />
+                    </Col>
+                    <Col lg={4}>
+                      <input
+                        // ref={nameRef}
+                        type="text"
+                        className="form-control"
+                        placeholder="Tỉnh/ Thành phố"
+                      />
+                    </Col>
+                  </Row>
+                </Col>
+                <Col lg={12}>
+                  <label>Hình ảnh: </label>
+                  <br />
+                  <UploadButton
+                    uploader={uploader}
+                    options={{ multi: true }}
+                    onComplete={(files) => console.log(files)}
+                  >
+                    {({ onClick }) => (
+                      <button onClick={onClick}>Upload a file...</button>
+                    )}
+                  </UploadButton>
+                </Col>
+              </Row>
+              <Button
+                type="button"
+                className="btn btn-success mt-3"
+                // onClick={handleSubmit}
+              >
+                <FontAwesomeIcon icon={faSave} /> Lưu thông tin
+              </Button>
+              <Button
+                type="button"
+                className="btn btn-danger mt-3 ml-3"
+                // onClick={handleCancel}
+              >
+                &times; Hủy
+              </Button>
+            </form>
+          </ModalBody>
+        </Modal>
+      </div>
       <div className="row">
         <div className="col-sm-3" style={{ padding: 0 }}>
           <SideBar menu={sidebar_menu} />
@@ -201,9 +304,13 @@ export default function HotelListPage() {
             </div>
 
             <div className="begin-item">
-              <Link className="btn-new" type="button" to="/addhotel">
+              <button
+                className="btn-new"
+                type="button"
+                onClick={() => setmodal(true)}
+              >
                 THÊM KHÁCH SẠN
-              </Link>
+              </button>
               <form className="form-inline w-50">
                 <select
                   className="browser-default custom-select mb-2 mr-3"
@@ -247,7 +354,7 @@ export default function HotelListPage() {
                       <th scope="col">Quận/huyện</th>
                       <th scope="col">Thành phố</th>
                       <th scope="col">Đánh giá</th>
-                      <th scope="col">Chỉnh sửa</th>
+                      {/* <th scope="col">Chỉnh sửa</th> */}
                       <th scope="col">Xóa</th>
                     </tr>
                   </thead>
@@ -263,32 +370,8 @@ export default function HotelListPage() {
                           <td>{item?.location?.province}</td>
                           <td>
                             <Star item={item?.start} />
-                            {/* <span>
-                              <FontAwesomeIcon icon={faStar} />
-                              <FontAwesomeIcon icon={faStar} />
-                              <FontAwesomeIcon icon={faStar} />
-                              <FontAwesomeIcon icon={faStar} />
-                              <FontAwesomeIcon icon={faStar} />
-                            </span> */}
                           </td>
                           {/* <td>
-                            <button
-                              onClick={() => goToDetail(item.code)}
-                              variant="primary"
-                              type="button"
-                              className="btn btn-primary btn-xs"
-                              data-toggle="modal"
-                              data-target="#moreModal"
-                            >
-                              <span
-                                className={{
-                                  dataToggle: Tooltip,
-                                  title: "Xem thêm",
-                                }}
-                              >
-                                <FontAwesomeIcon icon={faStickyNote} />
-                              </span>
-                            </button>
                             <button
                               type="button"
                               className="btn btn-secondary btn-xs"
@@ -303,44 +386,10 @@ export default function HotelListPage() {
                                   title: "Chỉnh sửa",
                                 }}
                               >
-                                <FontAwesomeIcon icon={faPencilSquare} />
-                              </span>
-                            </button>
-                            <button
-                              onClick={() => handleClickDelete(item?.code)}
-                              type="button"
-                              className="btn btn-danger btn-xs"
-                              data-toggle="modal"
-                              data-target="#delModal"
-                            >
-                              <span
-                                className={{
-                                  dataToggle: Tooltip,
-                                  title: "Xóa",
-                                }}
-                              >
-                                <FontAwesomeIcon icon={faTrash} />
-                              </span>
-                            </button>
-                          </td> */}
-                          <td>
-                            <button
-                              type="button"
-                              className="btn btn-secondary btn-xs"
-                              data-toggle="modal"
-                              data-target="#editModal"
-                              variant="primary"
-                            >
-                              <span
-                                className={{
-                                  dataToggle: Tooltip,
-                                  title: "Chỉnh sửa",
-                                }}
-                              >
                                 <FontAwesomeIcon icon={faPencilSquare} /> Sửa
                               </span>
                             </button>
-                          </td>
+                          </td> */}
 
                           <td>
                             <button
@@ -376,25 +425,10 @@ export default function HotelListPage() {
                           <td>{item?.location?.address}</td>
                           <td>{item?.location?.district}</td>
                           <td>{item?.location?.province}</td>
-                          <td>{item?.start}</td>
+                          <td>
+                            <Star item={item?.start} />
+                          </td>
                           {/* <td>
-                            <button
-                              onClick={() => goToDetail(item.code)}
-                              variant="primary"
-                              type="button"
-                              className="btn btn-primary btn-xs"
-                              data-toggle="modal"
-                              data-target="#moreModal"
-                            >
-                              <span
-                                className={{
-                                  dataToggle: Tooltip,
-                                  title: "Xem thêm",
-                                }}
-                              >
-                                <FontAwesomeIcon icon={faStickyNote} />
-                              </span>
-                            </button>
                             <button
                               type="button"
                               className="btn btn-secondary btn-xs"
@@ -409,44 +443,10 @@ export default function HotelListPage() {
                                   title: "Chỉnh sửa",
                                 }}
                               >
-                                <FontAwesomeIcon icon={faPencilSquare} />
-                              </span>
-                            </button>
-                            <button
-                              onClick={() => handleClickDelete(item?.code)}
-                              type="button"
-                              className="btn btn-danger btn-xs"
-                              data-toggle="modal"
-                              data-target="#delModal"
-                            >
-                              <span
-                                className={{
-                                  dataToggle: Tooltip,
-                                  title: "Xóa",
-                                }}
-                              >
-                                <FontAwesomeIcon icon={faTrash} />
-                              </span>
-                            </button>
-                          </td> */}
-                          <td>
-                            <button
-                              type="button"
-                              className="btn btn-secondary btn-xs"
-                              data-toggle="modal"
-                              data-target="#editModal"
-                              variant="primary"
-                            >
-                              <span
-                                className={{
-                                  dataToggle: Tooltip,
-                                  title: "Chỉnh sửa",
-                                }}
-                              >
                                 <FontAwesomeIcon icon={faPencilSquare} /> Sửa
                               </span>
                             </button>
-                          </td>
+                          </td> */}
 
                           <td>
                             <button

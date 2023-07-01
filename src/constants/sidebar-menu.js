@@ -25,7 +25,7 @@ const sidebar_menu = [
   {
     id: 4,
     // icon: <i className="bx bx-file"></i>,
-    path: "/profile",
+    path: "/order",
     title: "Quản lý đơn đặt",
   },
 ];

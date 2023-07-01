@@ -7,77 +7,77 @@ const initialState = {
   data: {},
 };
 
-export const addBook = createAsyncThunk("/addBook", async (arg, thunkApi) => {
+export const addorder = createAsyncThunk("/addorder", async (arg, thunkApi) => {
   const token = thunkApi.getState().userReducer.token;
-  // const res = await customAxios.post(`/bookList.json?auth=${token}`, {
-  const res = await customAxios.post(`/lbm/v1/book/info/create`, {
-    bookName: arg.bookName,
-    category: arg.category,
+  // const res = await customAxios.post(`/orderList.json?auth=${token}`, {
+  const res = await customAxios.post(`/booking`, {
+    idorder: arg.idorder,
     description: arg.description,
-    publisher: arg.publisher,
-    auth: arg.auth,
-    amount: arg.amount,
-    // statusBook: arg.statusBook,
-    // codeBook: arg.codeBook,
-    // dateAddBook: arg.dateAddBook,
-    bookImage: arg.bookImage,
+    listURL: arg.listURL,
+    orderID: arg.orderID,
+    orderNumber: arg.orderNumber,
+    orderName: arg.orderName,
+    numberBed: arg.numberBed,
+    maxQuantity: arg.maxQuantity,
+    price: arg.price,
+    status: arg.status,
   });
   return res.data;
 });
 
-export const getListBook = createAsyncThunk(
-  "/lbm/v1/book/info/get-all",
+export const getListorder = createAsyncThunk(
+  // "orderList/getList",
+  "/booking",
   async (arg, thunkApi) => {
     const token = thunkApi.getState().userReducer.token;
-    const res = await customAxios.get(
-      `/lbm/v1/book/info/get-all.json?auth=${token}`
-    );
+    // const res = await customAxios.get(`/orderList.json?auth=${token}`);
+    const res = await customAxios.get(`/booking.json?auth=${token}`);
     return res.data;
   }
 );
 
-const bookSlice = createSlice({
-  name: "book",
+const orderSlice = createSlice({
+  name: "order",
   initialState,
   reducers: {
-    addListBook: (state, action) => {
-      // const books = action.payload;
-      // return { ...books };
+    addListorder: (state, action) => {
+      // const orders = action.payload;
+      // return { ...orders };
     },
   },
   extraReducers: (builder) => {
     builder
 
       //getList
-      .addCase(getListBook.pending, (state, action) => {
+      .addCase(getListorder.pending, (state, action) => {
         state.loading = true;
         state.error = false;
       })
-      .addCase(getListBook.fulfilled, (state, action) => {
-        const products = action.payload;
+      .addCase(getListorder.fulfilled, (state, action) => {
+        const orders = action.payload;
         state.loading = false;
-        state.data = products;
+        state.data = orders;
       })
-      .addCase(getListBook.rejected, (state, action) => {
+      .addCase(getListorder.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
       })
 
-      //add product
-      .addCase(addBook.pending, (state, action) => {
+      //add order
+      .addCase(addorder.pending, (state, action) => {
         state.loading = true;
         state.error = false;
       })
-      .addCase(addBook.fulfilled, (state, action) => {
+      .addCase(addorder.fulfilled, (state, action) => {
         state.loading = false;
       })
-      .addCase(addBook.rejected, (state, action) => {
+      .addCase(addorder.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
       });
   },
 });
 
-export const { addListBook } = bookSlice.actions;
-export const selectListBook = (state) => state.bookReducer;
-export default bookSlice.reducer;
+export const { addListorder } = orderSlice.actions;
+export const selectListorder = (state) => state.orderReducer;
+export default orderSlice.reducer;
