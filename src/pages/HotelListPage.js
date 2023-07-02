@@ -66,9 +66,6 @@ export default function HotelListPage() {
   const provinceRef = useRef(null);
   const districtRef = useRef(null);
   const houseRef = useRef(null);
-  const imageHotel1 = useRef(null);
-  const imageHotel2 = useRef(null);
-  const imageHotel3 = useRef(null);
 
   const queryParams = new URLSearchParams(window.location.search);
   const dispatch = useDispatch();
@@ -77,7 +74,7 @@ export default function HotelListPage() {
   }, []);
   const gethotelApi = async () => {
     try {
-      const res = await customAxios.get("/hotel");
+      const res = await customAxios.get("/hotel/list");
       dispatch(addListhotel(res.data));
       sethotelState(res?.data);
     } catch (error) {
@@ -92,7 +89,7 @@ export default function HotelListPage() {
   }, []);
   const getDetail = async (id) => {
     try {
-      const detail = await customAxios.get(`/hotel/${id}`);
+      const detail = await customAxios.get(`/hotel?id=${id}`);
       setDetail(detail?.data);
     } catch (error) {}
     setShowDetail(true);
@@ -118,7 +115,7 @@ export default function HotelListPage() {
 
   const handleDelete = async () => {
     try {
-      await customAxios.delete(`/hotel/${deleteCode}`);
+      await customAxios.delete(`/hotel?id=${deleteCode}`);
       gethotelApi();
     } catch (error) {
       console.log("Lỗi", error);

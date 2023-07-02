@@ -53,7 +53,7 @@ export default function OrderPage() {
   }, []);
   const getorderApi = async () => {
     try {
-      const res = await customAxios.get("/booking");
+      const res = await customAxios.get("/booking/list");
       dispatch(addListorder(res.data));
       setorderState(res?.data);
     } catch (error) {

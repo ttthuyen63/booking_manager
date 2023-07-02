@@ -44,6 +44,7 @@ import { Slide } from "react-slideshow-image";
 import Room from "../components/Room";
 import { addListhotel } from "../redux/hotelSlice";
 import { useStepContext } from "@mui/material";
+import { useRef } from "react";
 
 export default function RoomListPage() {
   const [roomState, setroomState] = useState(null);
@@ -62,6 +63,15 @@ export default function RoomListPage() {
   const [hotelState, sethotelState] = useState(null);
   const [hotelNameState, sethotelNameState] = useState(null);
   const [hotelNameData, sethotelNameData] = useState(null);
+  const room_nameRef = useRef(null);
+  const room_numberRef = useRef(null);
+  const phanloaiRef = useRef(null);
+  const maxpeopleRef = useRef(null);
+  const priceRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const [files, setFile] = useState();
+  const [phanloai, setphanloai] = useState();
+  const [phanloaiData, setphanloaiData] = useState();
 
   console.log("roomState...", roomState);
   const roomList = useSelector((state) => state.roomReducer);
@@ -69,27 +79,37 @@ export default function RoomListPage() {
   const queryParams = new URLSearchParams(window.location.search);
   const dispatch = useDispatch();
 
+  const convertToObj = (item) => {
+    return {
+      value: item,
+      label: item,
+    };
+  };
+
   useEffect(() => {
-    gethotelApi();
+    gethotelNameApi();
   }, []);
-  const gethotelApi = async () => {
+  const gethotelNameApi = async () => {
     try {
-      const res = await customAxios.get("/hotel");
-      dispatch(addListhotel(res.data));
-      sethotelState(res?.data);
+      const res = await customAxios.get("/hotel/listidhotel");
+      res.data.forEach((currentValue, index, arr) => {
+        arr[index] = convertToObj(currentValue);
+      });
+      sethotelNameState(res?.data);
     } catch (error) {
       console.log("Lỗi", error);
     }
   };
 
-  console.log("hotelState...", hotelState);
+  console.log("hotelNameState...", hotelNameState);
+  // console.log("hotelState...", hotelState);
 
   useEffect(() => {
     getroomApi();
   }, []);
   const getroomApi = async () => {
     try {
-      const res = await customAxios.get("/room");
+      const res = await customAxios.get("/room/list");
       dispatch(addListroom(res.data));
       setroomState(res?.data);
     } catch (error) {
@@ -104,7 +124,7 @@ export default function RoomListPage() {
   }, []);
   const getDetail = async (id) => {
     try {
-      const detail = await customAxios.get(`/room/${id}`);
+      const detail = await customAxios.get(`/room?id=${id}`);
       setDetail(detail?.data);
     } catch (error) {}
     setShowDetail(true);
@@ -154,7 +174,7 @@ export default function RoomListPage() {
   const handleDelete = async () => {
     // console.log("id: ", deleteId);
     try {
-      await customAxios.post(`/room/${deleteCode}`);
+      await customAxios.post(`/room?id=${deleteCode}`);
       getroomApi();
     } catch (error) {
       console.log("Lỗi", error);
@@ -168,6 +188,11 @@ export default function RoomListPage() {
   const goToDetail = () => {
     navigate("/roomDetail");
   };
+
+  const phanloaibed = [
+    { value: "1", label: "Phòng đơn" },
+    { value: "2", label: "Phòng đôi" },
+  ];
 
   const handleChangeSearch = (e) => {
     const query = e.target.value;
@@ -228,6 +253,93 @@ export default function RoomListPage() {
   const handleChangeHotelName = (e) => {
     sethotelNameData(e);
   };
+
+  const handleChangePhanLoai = (e) => {
+    setphanloaiData(e);
+  };
+
+  const handleChangeFile = (event) => {
+    setFile(event.target.files);
+    console.log("img...", event.target.files);
+  };
+
+  const fileNames = [];
+  for (let i = 0; i < files?.length; i++) {
+    const file = files[i];
+    const fileName = file.name;
+    console.log("filename...", fileName); // Lấy tên tệp tin
+  }
+
+  const [randomNumber, setRandomNumber] = useState(null);
+  const [generatedNumbers, setGeneratedNumbers] = useState([]);
+
+  const generateRandomNumber = () => {
+    let newNumber;
+    do {
+      newNumber = Math.floor(Math.random() * 100) + 1; // Sinh số ngẫu nhiên từ 1 đến 100
+    } while (generatedNumbers.includes(newNumber)); // Kiểm tra tính duy nhất của số mới
+
+    setRandomNumber(newNumber);
+    setGeneratedNumbers([...generatedNumbers, newNumber]);
+  };
+
+  const handleAdd = () => {
+    setmodal(true);
+    generateRandomNumber();
+  };
+
+  const randomID = generatedNumbers?.toString();
+  console.log("random...", randomID);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    for (let i = 0; i < files?.length; i++) {
+      const file = files[i];
+      const fileName = file.name;
+      fileNames.push(fileName);
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      var raw = JSON.stringify({
+        id: randomID,
+        hotel_id: hotelNameData?.value,
+        room_number: room_numberRef.current.value,
+        room_name: room_nameRef.current.value,
+        number_bed: phanloaiData?.value,
+        maximum_quantity: maxpeopleRef.current.value,
+        price: priceRef.current.value,
+        description: descriptionRef.current.value,
+        listURL: fileNames,
+      });
+    }
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch("http://localhost:8080/room", requestOptions)
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  };
+
+  function countNestedArrayElements(arr) {
+    let count = 0;
+
+    for (let i = 0; i < arr.length; i++) {
+      const element = arr[i];
+
+      if (Array.isArray(element)) {
+        count += countNestedArrayElements(element); // Đệ quy gọi lại hàm với phần tử lồng nhau
+      } else {
+        count++;
+      }
+    }
+
+    return count;
+  }
 
   return (
     <div>
@@ -340,82 +452,84 @@ export default function RoomListPage() {
                     isClearable={true}
                     className="form-control"
                     value={hotelNameData}
-                    placeholder="Chọn danh mục chung"
+                    // placeholder="Chọn khách sạn"
                     onChange={handleChangeHotelName}
                   />
                 </Col>
                 <Col lg={12}>
                   <label>Tên phòng</label>
                   <input
-                    // ref={nameRef}
+                    ref={room_nameRef}
                     type="text"
                     className="form-control"
-                    placeholder="Nhập tên khách sạn"
+                    // placeholder="Nhập tên phòng"
                   />
                 </Col>
                 <Col lg={12}>
                   <label>Số phòng</label>
                   <input
-                    // ref={nameRef}
+                    ref={room_numberRef}
                     type="text"
                     className="form-control"
-                    placeholder="Nhập tên khách sạn"
+                    // placeholder="Nhập số phòng"
                   />
                 </Col>
                 <Col lg={12}>
                   <label>Phân loại phòng</label>
-                  <input
+                  <br></br>
+                  {/* <input
                     // ref={nameRef}
-                    type="text"
+                    // type="text"
+                    // className="form-control"
+                    
+                  /> */}
+                  <Select
+                    // ref={categoryCodeRef}
+                    options={phanloaibed}
+                    isClearable={true}
                     className="form-control"
-                    placeholder="Nhập tên khách sạn"
+                    value={phanloaiData}
+                    // placeholder="Chọn khách sạn"
+                    onChange={handleChangePhanLoai}
                   />
                 </Col>
                 <Col lg={12}>
                   <label>Số lượng khách tối đa</label>
                   <input
-                    // ref={nameRef}
+                    ref={maxpeopleRef}
                     type="text"
                     className="form-control"
-                    placeholder="Nhập tên khách sạn"
+                    // placeholder="Nhập tên khách sạn"
                   />
                 </Col>
                 <Col lg={12}>
                   <label>Giá</label>
                   <input
-                    // ref={nameRef}
+                    ref={priceRef}
                     type="text"
                     className="form-control"
-                    placeholder="Nhập tên khách sạn"
+                    // placeholder="Nhập tên khách sạn"
                   />
                 </Col>
                 <Col lg={12}>
                   <label>Mô tả phòng</label>
                   <input
-                    // ref={nameRef}
+                    ref={descriptionRef}
                     type="text"
                     className="form-control"
-                    placeholder="Nhập tên khách sạn"
+                    // placeholder="Nhập tên khách sạn"
                   />
                 </Col>
                 <Col lg={12}>
                   <label>Hình ảnh: </label>
                   <br />
-                  <UploadButton
-                    uploader={uploader}
-                    options={{ multi: true }}
-                    onComplete={(files) => console.log(files)}
-                  >
-                    {({ onClick }) => (
-                      <button onClick={onClick}>Upload a file...</button>
-                    )}
-                  </UploadButton>
+                  <input type="file" multiple onChange={handleChangeFile} />
                 </Col>
               </Row>
               <Button
                 type="button"
                 className="btn btn-success mt-3"
-                // onClick={handleSubmit}
+                onClick={handleSubmit}
               >
                 <FontAwesomeIcon icon={faSave} /> Lưu thông tin
               </Button>
@@ -454,7 +568,8 @@ export default function RoomListPage() {
               <button
                 className="btn-new"
                 type="button"
-                onClick={() => setmodal(true)}
+                // onClick={() => setmodal(true)}
+                onClick={() => handleAdd()}
               >
                 THÊM PHÒNG
               </button>
@@ -482,7 +597,7 @@ export default function RoomListPage() {
             <div className="control-hotel">
               <div className="mt-3 control-hotel-table shadow-sm p-3 mb-5 bg-white rounded">
                 <div className="item-header">
-                  <h2>Danh sách khách sạn</h2>
+                  <h2>Danh sách phòng</h2>
                   <div className="item-search">
                     <input
                       type="text"
@@ -517,7 +632,7 @@ export default function RoomListPage() {
                           </td>
                           <td>{item?.maximum_quantity}</td>
                           <td>{currencyFormat(item?.price)}</td>
-                          <td>{item?.room_number?.length - 1}</td>
+                          <td>{countNestedArrayElements(item?.room_number)}</td>
                           <td>
                             <button
                               onClick={() => getDetail(item?.id)}
