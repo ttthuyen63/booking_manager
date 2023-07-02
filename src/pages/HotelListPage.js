@@ -43,6 +43,7 @@ import { Uploader } from "uploader";
 import { UploadButton } from "react-uploader";
 import "react-slideshow-image/dist/styles.css";
 import { Slide } from "react-slideshow-image";
+import { useRef } from "react";
 
 export default function HotelListPage() {
   const [hotelState, sethotelState] = useState(null);
@@ -60,6 +61,14 @@ export default function HotelListPage() {
   console.log("hotelState...", hotelState);
   const hotelList = useSelector((state) => state.hotelReducer);
   const [detail, setDetail] = useState([]);
+  const hotel_idRef = useRef(null);
+  const hotel_nameRef = useRef(null);
+  const provinceRef = useRef(null);
+  const districtRef = useRef(null);
+  const houseRef = useRef(null);
+  const imageHotel1 = useRef(null);
+  const imageHotel2 = useRef(null);
+  const imageHotel3 = useRef(null);
 
   const queryParams = new URLSearchParams(window.location.search);
   const dispatch = useDispatch();
@@ -169,18 +178,66 @@ export default function HotelListPage() {
     backgroundSize: "cover",
     height: "400px",
   };
-  const slideImages = detail?.map((item) => {
-    return item?.images;
+  // const slideImages = detail?.map((item) => {
+  //   return item?.images;
 
-    // {
-    //   url: "https://images.unsplash.com/photo-1506710507565-203b9f24669b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1536&q=80",
-    // },
-    // {
-    //   url: "https://images.unsplash.com/photo-1536987333706-fc9adfb10d91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
-    // },
-  });
+  //   // {
+  //   //   url: "https://images.unsplash.com/photo-1506710507565-203b9f24669b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1536&q=80",
+  //   // },
+  //   // {
+  //   //   url: "https://images.unsplash.com/photo-1536987333706-fc9adfb10d91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
+  //   // },
+  // });
 
-  console.log("slideimage...", slideImages[0]);
+  // console.log("slideimage...", slideImages[0]);
+
+  const [files, setFile] = useState();
+  const handleChangeFile = (event) => {
+    setFile(event.target.files);
+    console.log("img...", event.target.files);
+  };
+  const fileNames = [];
+  for (let i = 0; i < files?.length; i++) {
+    const file = files[i];
+    const fileName = file.name;
+    console.log("filename...", fileName); // Lấy tên tệp tin
+  }
+
+  console.log("img...", files);
+
+  const handleSubmit = (e) => {
+    e.preventDefault(); //chặn trước khi action đẩy dữ liệu lên thanh url
+    for (let i = 0; i < files?.length; i++) {
+      const file = files[i];
+      const fileName = file.name;
+      fileNames.push(fileName);
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      var raw = JSON.stringify({
+        id: hotel_idRef.current.value,
+        name: hotel_nameRef.current.value,
+        location: {
+          province: provinceRef.current.value,
+          district: districtRef.current.value,
+          address: houseRef.current.value,
+        },
+
+        images: fileNames,
+      });
+    }
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch("http://localhost:8080/hotel", requestOptions)
+      .then((response) => response.text())
+      .then((result) => window.location.reload())
+      .catch((error) => console.log("error", error));
+  };
 
   return (
     <div>
@@ -242,14 +299,13 @@ export default function HotelListPage() {
       )}
 
       <div>
-        {detail?.map((item, index) => (
+        {/* {detail?.map((item, index) => (
           <Modal
             size="lg"
             isOpen={showDetail}
             toggle={() => setShowDetail(!showDetail)}
           >
             <ModalHeader toggle={() => setShowDetail(!showDetail)}>
-              {/* THÊM KHÁCH SẠN */}
             </ModalHeader>
             <ModalBody>
               <form>
@@ -277,7 +333,7 @@ export default function HotelListPage() {
               </form>
             </ModalBody>
           </Modal>
-        ))}
+        ))} */}
       </div>
       <div>
         <Modal size="lg" isOpen={modal} toggle={() => setmodal(!modal)}>
@@ -290,7 +346,7 @@ export default function HotelListPage() {
                 <Col lg={12}>
                   <label>Mã khách sạn</label>
                   <input
-                    // ref={nameRef}
+                    ref={hotel_idRef}
                     type="text"
                     className="form-control"
                     placeholder="Nhập mã khách sạn"
@@ -299,7 +355,7 @@ export default function HotelListPage() {
                 <Col lg={12}>
                   <label>Tên khách sạn</label>
                   <input
-                    // ref={nameRef}
+                    ref={hotel_nameRef}
                     type="text"
                     className="form-control"
                     placeholder="Nhập tên khách sạn"
@@ -310,7 +366,7 @@ export default function HotelListPage() {
                   <Row>
                     <Col lg={4}>
                       <input
-                        // ref={nameRef}
+                        ref={houseRef}
                         type="text"
                         className="form-control"
                         placeholder="Số nhà"
@@ -318,7 +374,7 @@ export default function HotelListPage() {
                     </Col>
                     <Col lg={4}>
                       <input
-                        // ref={nameRef}
+                        ref={districtRef}
                         type="text"
                         className="form-control"
                         placeholder="Quận/ Huyện"
@@ -326,7 +382,7 @@ export default function HotelListPage() {
                     </Col>
                     <Col lg={4}>
                       <input
-                        // ref={nameRef}
+                        ref={provinceRef}
                         type="text"
                         className="form-control"
                         placeholder="Tỉnh/ Thành phố"
@@ -337,7 +393,8 @@ export default function HotelListPage() {
                 <Col lg={12}>
                   <label>Hình ảnh: </label>
                   <br />
-                  <UploadButton
+                  <input type="file" multiple onChange={handleChangeFile} />
+                  {/* <UploadButton
                     uploader={uploader}
                     options={{ multi: true }}
                     onComplete={(files) => console.log(files)}
@@ -345,13 +402,13 @@ export default function HotelListPage() {
                     {({ onClick }) => (
                       <button onClick={onClick}>Upload a file...</button>
                     )}
-                  </UploadButton>
+                  </UploadButton> */}
                 </Col>
               </Row>
               <Button
                 type="button"
                 className="btn btn-success mt-3"
-                // onClick={handleSubmit}
+                onClick={handleSubmit}
               >
                 <FontAwesomeIcon icon={faSave} /> Lưu thông tin
               </Button>

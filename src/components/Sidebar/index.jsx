@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import SideBarItem from "./sidebar-item";
 
 import "./styles.css";
-import logo from "../../assets/images/white-logo.png";
+import e from "../../assets/images/e.png";
 import LogoutIcon from "../../assets/icons/logout.svg";
 
 function SideBar({ menu }) {
@@ -28,7 +28,7 @@ function SideBar({ menu }) {
     <nav className="sidebar">
       <div className="sidebar-container">
         <div className="sidebar-logo-container">
-          <img src={logo} alt="logo" />
+          <img src={e} alt="logo" className="img-logo" />
         </div>
 
         <div className="sidebar-container">

@@ -240,8 +240,9 @@ export default function OrderPage() {
                     <tr>
                       <th scope="col">Mã đơn hàng</th>
                       <th scope="col">Mã khách sạn</th>
-                      <th scope="col">Mã phòng</th>
-                      <th scope="col">Họ tên</th>
+                      <th scope="col">Tên phòng</th>
+                      <th scope="col">Số phòng</th>
+                      <th scope="col">Họ tên KH</th>
                       <th scope="col">SĐT</th>
                       <th scope="col">Ngày đến</th>
                       <th scope="col">Ngày đi</th>
@@ -254,11 +255,12 @@ export default function OrderPage() {
                     <tbody id="myTable">
                       {filterList?.map((item, index) => (
                         <tr>
-                          <td>{item?.id}</td>
+                          <td>HĐ{item?.id}</td>
                           <td>{item?.hotel_id}</td>
-                          <td>{item?.location?.address}</td>
-                          <td>{item?.location?.district}</td>
-                          <td>{item?.location?.district}</td>
+                          <td>{item?.room_name}</td>
+                          <td>{item?.room_number}</td>
+                          <td>{item?.customer_name}</td>
+                          <td>{item?.customer_phone}</td>
                           <td>{item?.start_date}</td>
                           <td>{item?.end_date}</td>
                           <td>{currencyFormat(item?.price)}</td>
