@@ -4,8 +4,6 @@ import HomePage from "./pages/homePage";
 import LoginPage from "./pages/loginPage";
 import { Container } from "react-bootstrap";
 import "boxicons/css/boxicons.min.css";
-import EditRoomPage from "./pages/EditRoomPage";
-import AddRoomPage from "./pages/AddRoomPage";
 import RoomListPage from "./pages/RoomListPage";
 
 function App() {
@@ -15,8 +13,6 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/addRoom" element={<AddRoomPage />} />
-          <Route path="/editRoom" element={<EditRoomPage />} />
           <Route path="/roomList" element={<RoomListPage />} />
           <Route path="/login" element={<LoginPage />} />
         </Routes>

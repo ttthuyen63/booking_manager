@@ -5,18 +5,13 @@ import App from "./App";
 import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
 import HomePage from "./pages/homePage";
 import LoginPage from "./pages/loginPage";
-import EditProductPage from "./pages/EditRoomPage";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import "bootstrap/dist/css/bootstrap.css";
 import store from "./redux/store";
 import ProtectRouter from "./components/ProtectRouter";
 import RoomListPage from "./pages/RoomListPage";
-import AddRoomPage from "./pages/AddRoomPage";
-import EditRoomPage from "./pages/EditRoomPage";
 import HotelListPage from "./pages/HotelListPage";
-import EditHotelPage from "./pages/EditHotelPage";
-import AddHotelPage from "./pages/AddHotelPage";
 import OrderPage from "./pages/orderPage";
 
 const router = createBrowserRouter([
@@ -28,39 +23,7 @@ const router = createBrowserRouter([
       </ProtectRouter>
     ),
   },
-  {
-    path: "/addRoom",
-    element: (
-      <ProtectRouter>
-        <AddRoomPage />
-      </ProtectRouter>
-    ),
-  },
-  {
-    path: "/addHotel",
-    element: (
-      <ProtectRouter>
-        <AddHotelPage />
-      </ProtectRouter>
-    ),
-  },
 
-  {
-    path: "/editRoom/:code",
-    element: (
-      <ProtectRouter>
-        <EditRoomPage />
-      </ProtectRouter>
-    ),
-  },
-  {
-    path: "/editHotel/:code",
-    element: (
-      <ProtectRouter>
-        <EditHotelPage />
-      </ProtectRouter>
-    ),
-  },
   {
     path: "/roomList",
     element: (

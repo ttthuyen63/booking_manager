@@ -89,8 +89,8 @@ export default function HotelListPage() {
   }, []);
   const getDetail = async (id) => {
     try {
-      const detail = await customAxios.get(`/hotel?id=${id}`);
-      setDetail(detail?.data);
+      const detailData = await customAxios.get(`/hotel?id=${id}`);
+      setDetail(detailData?.data);
     } catch (error) {}
     setShowDetail(true);
   };
@@ -147,13 +147,16 @@ export default function HotelListPage() {
     if (!filterhotel) {
       return hotelState;
     }
-    return hotelState?.filter((item) => item?.name === filterhotel);
+    return hotelState?.filter(
+      (item) => item?.location?.district === filterhotel
+    );
   }
 
   var filterList = useMemo(getFilterList, [filterhotel, hotelState]);
   function handleChange(event) {
     setfilterhotel(event.target.value);
   }
+  console.log("fil........", filterhotel);
 
   const navigate = useNavigate();
 
@@ -177,16 +180,9 @@ export default function HotelListPage() {
   };
   // const slideImages = detail?.map((item) => {
   //   return item?.images;
-
-  //   // {
-  //   //   url: "https://images.unsplash.com/photo-1506710507565-203b9f24669b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1536&q=80",
-  //   // },
-  //   // {
-  //   //   url: "https://images.unsplash.com/photo-1536987333706-fc9adfb10d91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
-  //   // },
   // });
 
-  // console.log("slideimage...", slideImages[0]);
+  console.log("slideimage...", detail?.images);
 
   const [files, setFile] = useState();
   const handleChangeFile = (event) => {
@@ -235,6 +231,11 @@ export default function HotelListPage() {
       .then((result) => window.location.reload())
       .catch((error) => console.log("error", error));
   };
+
+  const optionDistrict = [
+    { value: "Hoàn Kiếm", label: "Hoàn Kiếm" },
+    { value: "Hà Đông", label: "Hà Đông" },
+  ];
 
   return (
     <div>
@@ -296,21 +297,22 @@ export default function HotelListPage() {
       )}
 
       <div>
-        {/* {detail?.map((item, index) => (
+        {detail?.map((item, index) => (
           <Modal
             size="lg"
             isOpen={showDetail}
             toggle={() => setShowDetail(!showDetail)}
           >
-            <ModalHeader toggle={() => setShowDetail(!showDetail)}>
-            </ModalHeader>
+            <ModalHeader
+              toggle={() => setShowDetail(!showDetail)}
+            ></ModalHeader>
             <ModalBody>
               <form>
                 <Row>
                   <Col lg={6}>
                     <div className="slide-container">
                       <Slide>
-                        {slideImages[0]?.map((slideImage, index) => (
+                        {detail?.images?.map((slideImage, index) => (
                           <div key={index}>
                             <div
                               style={{
@@ -330,7 +332,7 @@ export default function HotelListPage() {
               </form>
             </ModalBody>
           </Modal>
-        ))} */}
+        ))}
       </div>
       <div>
         <Modal size="lg" isOpen={modal} toggle={() => setmodal(!modal)}>
@@ -449,24 +451,25 @@ export default function HotelListPage() {
                 THÊM KHÁCH SẠN
               </button>
               <form className="form-inline w-50">
-                <select
+                <Select
                   className="browser-default custom-select mb-2 mr-3"
                   // value={filterStatus}
                   onChange={handleChange}
+                  options={optionDistrict}
                 >
                   {/* <option selected disabled>
                       Lọc theo danh mục
                     </option> */}
                   <option value="">Tất cả</option>
-                  {hotelState?.map((item) => (
+                  {/* {hotelState?.map((item) => (
                     <option value={item?.location?.district}>
                       {item?.location?.district}
                     </option>
-                  ))}
+                  ))} */}
 
                   {/* <option value="trang-phuc_bong-da">Phòng đơn</option> */}
                   {/* <option value="trang-phuc_bong-chuyen">Phòng đôi</option> */}
-                </select>
+                </Select>
               </form>
             </div>
             <div className="control-hotel">
@@ -565,25 +568,25 @@ export default function HotelListPage() {
                           <td>
                             <Star item={item?.start} />
                           </td>
-                          {/* <td>
+                          <td>
                             <button
-                              type="button"
-                              className="btn btn-secondary btn-xs"
-                              data-toggle="modal"
-                              data-target="#editModal"
+                              onClick={() => getDetail(item?.id)}
                               variant="primary"
-                              onClick={() => handleEdit(item)}
+                              type="button"
+                              className="btn btn-warning btn-xs"
+                              data-toggle="modal"
+                              data-target="#moreModal"
                             >
                               <span
                                 className={{
                                   dataToggle: Tooltip,
-                                  title: "Chỉnh sửa",
+                                  title: "Xem thêm",
                                 }}
                               >
-                                <FontAwesomeIcon icon={faPencilSquare} /> Sửa
+                                <FontAwesomeIcon icon={faStickyNote} /> Xem
                               </span>
                             </button>
-                          </td> */}
+                          </td>
 
                           <td>
                             <button

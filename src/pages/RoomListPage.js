@@ -341,6 +341,11 @@ export default function RoomListPage() {
     return count;
   }
 
+  const optionDistrict = [
+    { value: "Hoàn Kiếm", label: "Hoàn Kiếm" },
+    { value: "Hà Đông", label: "Hà Đông" },
+  ];
+
   return (
     <div>
       {show === false ? (
@@ -448,7 +453,8 @@ export default function RoomListPage() {
                   <label>Mã khách sạn</label>
                   <Select
                     // ref={categoryCodeRef}
-                    options={hotelNameState}
+                    // options={hotelNameState}
+
                     isClearable={true}
                     className="form-control"
                     value={hotelNameData}
@@ -574,7 +580,7 @@ export default function RoomListPage() {
                 THÊM PHÒNG
               </button>
               <form className="form-inline w-50">
-                <select
+                <Select
                   className="browser-default custom-select mb-2 mr-3"
                   // value={filterStatus}
                   onChange={handleChange}
@@ -583,15 +589,15 @@ export default function RoomListPage() {
                       Lọc theo danh mục
                     </option> */}
                   <option value="">Tất cả</option>
-                  {filterData(roomState)?.map((item) => (
+                  {/* {filterData(roomState)?.map((item) => (
                     <option value={item?.location?.district}>
                       {item?.location?.district}
                     </option>
-                  ))}
+                  ))} */}
 
                   {/* <option value="trang-phuc_bong-da">Phòng đơn</option> */}
                   {/* <option value="trang-phuc_bong-chuyen">Phòng đôi</option> */}
-                </select>
+                </Select>
               </form>
             </div>
             <div className="control-hotel">
@@ -666,45 +672,29 @@ export default function RoomListPage() {
                         <tr>
                           <td>{item?.hotel_id}</td>
                           <td>{item?.room_name}</td>
-                          <td>{item?.number_bed}</td>
+                          <td>
+                            <Room item={item?.number_bed} />
+                          </td>
                           <td>{item?.maximum_quantity}</td>
-                          <td>{item?.price}</td>
-                          <td>{/* <Star item={item?.start} /> */}</td>
-                          {/* <td>
-                            <button
-                              type="button"
-                              className="btn btn-secondary btn-xs"
-                              data-toggle="modal"
-                              data-target="#editModal"
-                              variant="primary"
-                              onClick={() => handleEdit(item)}
-                            >
-                              <span
-                                className={{
-                                  dataToggle: Tooltip,
-                                  title: "Chỉnh sửa",
-                                }}
-                              >
-                                <FontAwesomeIcon icon={faPencilSquare} /> Sửa
-                              </span>
-                            </button>
-                          </td> */}
-
+                          <td>{currencyFormat(item?.price)}</td>
+                          <td>{item?.room_number?.length}</td>
+                          {/* <td>{countNestedArrayElements(item?.room_number)}</td> */}
                           <td>
                             <button
+                              onClick={() => getDetail(item?.id)}
+                              variant="primary"
                               type="button"
-                              className="btn btn-danger btn-xs"
+                              className="btn btn-warning btn-xs"
                               data-toggle="modal"
-                              data-target="#delModal"
-                              onClick={() => handleClickDelete(item?.id)}
+                              data-target="#moreModal"
                             >
                               <span
                                 className={{
                                   dataToggle: Tooltip,
-                                  title: "Xóa",
+                                  title: "Xem thêm",
                                 }}
                               >
-                                <FontAwesomeIcon icon={faTrash} /> Xóa
+                                <FontAwesomeIcon icon={faStickyNote} /> Xem
                               </span>
                             </button>
                           </td>
