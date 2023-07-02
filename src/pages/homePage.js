@@ -33,32 +33,34 @@ import { useState } from "react";
 import { addListproduct } from "../redux/roomSlice";
 import { logout } from "../redux/userSlice";
 import Widget from "../components/Widget";
-import Chart from "../components/Chart";
+// import Chart from "../components/Chart";
 import SideBar from "../components/Sidebar";
 import sidebar_menu from "../constants/sidebar-menu";
+import Chart from "react-apexcharts";
 
 export default function HomePage() {
   // const [first, setfirst] = useState(second);
-  const [bookStateLength, setbookStateLength] = useState(null);
+  const [moneyState, setmoneyState] = useState(null);
   const [productStateLength, setproductStateLength] = useState(null);
   const [borrowStateLength, setborrowStateLength] = useState(null);
   const [isActiveProduct, setisActiveProduct] = useState(false);
   const [isActiveOrder, setisActiveOrder] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   getBookApi();
-  //   getproductApi();
-  // }, []);
-  // const getBookApi = async () => {
-  //   try {
-  //     const res = await customAxios.get("/lbm/v1/book/info/get-all");
-  //     dispatch(addListBook(res.data));
-  //     setbookStateLength(res?.data);
-  //   } catch (error) {
-  //     console.log("Lỗi");
-  //   }
-  // };
+  useEffect(() => {
+    getmoneyApi();
+  }, []);
+  const getmoneyApi = async () => {
+    try {
+      const res = await customAxios.get("/booking/month");
+      // dispatch(addListBook(res.data));
+      setmoneyState(res?.data);
+    } catch (error) {
+      console.log("Lỗi");
+    }
+  };
+
+  console.log("money...", moneyState);
   // const getproductApi = async () => {
   //   try {
   //     const res = await customAxios.get("/lbm/v1/users/get-all");
@@ -69,114 +71,31 @@ export default function HomePage() {
   //   }
   // };
 
+  const [state, setState] = useState({
+    options: {
+      colors: ["#E91E63", "#FF9800"],
+      chart: {
+        id: "basic-bar",
+      },
+      xaxis: {
+        categories: ["Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7"],
+      },
+    },
+    series: [
+      {
+        name: "Doanh thu",
+        data: [30, 40, 45, 50, 49],
+      },
+      // {
+      //   name: "People Died",
+      //   data: [3, 60, 35, 80, 49, 70, 20, 81],
+      // },
+    ],
+  });
+
   return (
     <div className="row">
       <div className="col-sm-2" style={{ padding: 0 }}>
-        {/* <div className="menu">
-          <h4 className="menu-header">KMA Booking</h4>
-          <div className="d-flex align-items-start">
-            <div className="nav flex-column nav-pills">
-              <Link
-                className="nav-link active"
-                type="button"
-                to="/"
-                style={{ color: "white" }}
-              >
-                <FontAwesomeIcon icon={faHome} /> Trang chủ
-              </Link>
-
-              <div
-                className="dropdown product nav-link"
-                style={{ color: "white" }}
-              >
-                <div
-                  className="dropdown-btn"
-                  onClick={(e) => setisActiveProduct(!isActiveProduct)}
-                >
-                  <FontAwesomeIcon icon={faFileCirclePlus} /> Quản lý phòng
-                  <FontAwesomeIcon
-                    icon={faCaretDown}
-                    style={{ paddingLeft: "10px" }}
-                  />
-                </div>
-                {isActiveProduct && (
-                  <div className="dropdown-content">
-                    <div className="dropdown-item">
-                      <Link
-                        className="nav-link"
-                        type="button"
-                        to="/roomlist"
-                        style={{ color: "white", textDecoration: "none" }}
-                      >
-                        Tất cả phòng
-                      </Link>
-                    </div>
-                    <div className="dropdown-item">
-                      <Link
-                        className="nav-link"
-                        type="button"
-                        to="/addProduct"
-                        style={{ color: "white", textDecoration: "none" }}
-                      >
-                        Thêm phòng
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div
-                className="dropdown order nav-link"
-                style={{ color: "white" }}
-              >
-                <div
-                  className="dropdown-btn"
-                  onClick={(e) => setisActiveOrder(!isActiveOrder)}
-                >
-                  <FontAwesomeIcon icon={faBoxesPacking} /> Quản lý đơn đặt
-                  <FontAwesomeIcon
-                    icon={faCaretDown}
-                    style={{ paddingLeft: "10px" }}
-                  />
-                </div>
-                {isActiveOrder && (
-                  <div className="dropdown-content">
-                    <div className="dropdown-item">
-                      <Link
-                        className="nav-link"
-                        type="button"
-                        to="/orderList"
-                        style={{ color: "white", textDecoration: "none" }}
-                      >
-                        Tất cả đơn đặt
-                      </Link>
-                    </div>
-                    <div className="dropdown-item">
-                      <Link
-                        className="nav-link"
-                        type="button"
-                        to="/successDeliver"
-                        style={{ color: "white", textDecoration: "none" }}
-                      >
-                        Đơn đặt thành công
-                      </Link>
-                    </div>
-                    <div className="dropdown-item">
-                      <Link
-                        className="nav-link"
-                        type="button"
-                        to="/deliveringBill"
-                        style={{ color: "white", textDecoration: "none" }}
-                      >
-                        Đơn hàng chờ duyệt
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div> */}
         <SideBar menu={sidebar_menu} />
       </div>
 
@@ -198,6 +117,7 @@ export default function HomePage() {
 
           <div style={{ textAlign: "center" }}>
             <img
+              // src={require("../assets/images/e2.png")}
               src={require("../Logo-Hoc-Vien-Ky-Thuat-Mat-Ma-ACTVN-1.png")}
               style={{ width: "200px" }}
             />
@@ -206,22 +126,41 @@ export default function HomePage() {
             Thống kê
           </h2>
 
-          <div className="widgets" style={{ justifyContent: "center" }}>
-            <Widget type="product"></Widget>
-            <Widget type="order" />
-            <Widget type="earning" />
-            {/* <Widget type="balance" /> */}
+          <div className="row statisc">
+            <div className="col-1"></div>
+            <div className="col-6 widgets" style={{ justifyContent: "center" }}>
+              <div className="left">
+                <Widget type="product" />
+                <Widget type="earning" />
+              </div>
+              <div className="right">
+                <Widget type="balance" />
+                <Widget type="order" />
+              </div>
+            </div>
+            {/* <h1>
+              React Charts Demo <i class="fas fa-user"></i>{" "}
+            </h1> */}
+            {/* <div className="col-4">
+                <Chart
+                  options={state.options}
+                  series={state.series}
+                  type="bar"
+                  width="450"
+                />
+              </div> */}
+
+            <div className="col-5">
+              <Chart
+                options={state.options}
+                series={state.series}
+                type="area"
+                width="450"
+              />
+            </div>
           </div>
-          <div>
-            {/* <span>Biến động doanh thu theo tháng nửa đầu năm 2023</span> */}
-          </div>
-          {/* <div className="charts">
-            <Chart title="Biến động doanh thu 6 tháng qua" aspect={2 / 1} />
-          </div> */}
         </div>
       </div>
     </div>
   );
 }
-
-// "C:\Program Files\Google\Chrome\Application\chrome.exe" --disable-web-security --disable-gpu --user-data-dir=~/chromeTemp

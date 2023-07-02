@@ -11,90 +11,106 @@ import { currencyFormat } from "../ultils/constant";
 import { Link } from "react-router-dom";
 const Widget = ({ type, amount }) => {
   let data;
-  const [productState, setproductState] = useState(null);
-  const [billState, setbillState] = useState(null);
+  const [roomStateLength, setroomStateLength] = useState(null);
+  const [bookingLength, setbookingLength] = useState(null);
+  const [bookingRoomLength, setbookingRoomLength] = useState(null);
   const [revenueState, setrevenueState] = useState(null);
 
   useEffect(() => {
-    getproductApi();
+    getroomApi();
   }, []);
-  const getproductApi = async () => {
+  const getroomApi = async () => {
     try {
-      const res = await customAxios.get("/home/all");
-      setproductState(res?.data);
+      const res = await customAxios.get("/room/list");
+      setroomStateLength(res?.data);
     } catch (error) {
       console.log("Lỗi", error);
     }
   };
-  const filterData = (productState) => {
-    productState?.forEach((currentValue, index, arr) => {
-      let code = currentValue.code;
 
-      let objIndex = arr.findIndex((item) => {
-        return item.code == code;
-      });
-      if (index == objIndex) {
-        currentValue.color = [currentValue.color];
-        currentValue.size = [currentValue.size];
-        currentValue.quantity = [currentValue.quantity];
-      } else {
-        if (!arr[objIndex].color.includes(currentValue.color)) {
-          arr[objIndex].color = [...arr[objIndex].color, currentValue.color];
-        }
-        if (!arr[objIndex].size.includes(currentValue.size)) {
-          arr[objIndex].size = [...arr[objIndex].size, currentValue.size];
-        }
+  console.log("room...", roomStateLength);
+  // const filterData = (productState) => {
+  //   productState?.forEach((currentValue, index, arr) => {
+  //     let code = currentValue.code;
 
-        if (!arr[objIndex].quantity.includes(currentValue.quantity)) {
-          arr[objIndex].quantity = [
-            ...arr[objIndex].quantity,
-            currentValue.quantity,
-          ];
-        }
-        currentValue.code = null;
-      }
-    });
-    return productState?.filter((e) => e.code !== null);
-  };
-  const amountProducts = filterData(productState)?.length;
-  //   console.log("pro...", amountProducts);
+  //     let objIndex = arr.findIndex((item) => {
+  //       return item.code == code;
+  //     });
+  //     if (index == objIndex) {
+  //       currentValue.color = [currentValue.color];
+  //       currentValue.size = [currentValue.size];
+  //       currentValue.quantity = [currentValue.quantity];
+  //     } else {
+  //       if (!arr[objIndex].color.includes(currentValue.color)) {
+  //         arr[objIndex].color = [...arr[objIndex].color, currentValue.color];
+  //       }
+  //       if (!arr[objIndex].size.includes(currentValue.size)) {
+  //         arr[objIndex].size = [...arr[objIndex].size, currentValue.size];
+  //       }
+
+  //       if (!arr[objIndex].quantity.includes(currentValue.quantity)) {
+  //         arr[objIndex].quantity = [
+  //           ...arr[objIndex].quantity,
+  //           currentValue.quantity,
+  //         ];
+  //       }
+  //       currentValue.code = null;
+  //     }
+  //   });
+  //   return productState?.filter((e) => e.code !== null);
+  // };
+  // const amountProducts = filterData(productState)?.length;
 
   useEffect(() => {
-    getbillApi();
+    getbookingApi();
   }, []);
-  const getbillApi = async () => {
+  const getbookingApi = async () => {
     try {
-      const res = await customAxios.get("/admin/bill/all");
-      setbillState(res?.data);
+      const res = await customAxios.get("/booking/list");
+      setbookingLength(res?.data);
     } catch (error) {
       console.log("Lỗi", error);
     }
   };
-  console.log("bill...", billState);
-  const amountBills = billState?.length;
+  console.log("booking...", bookingLength);
+
+  useEffect(() => {
+    getbookingRoomApi();
+  }, []);
+  const getbookingRoomApi = async () => {
+    try {
+      const res = await customAxios.get("/room/roomstatus?status=true");
+      setbookingRoomLength(res?.data);
+    } catch (error) {
+      console.log("Lỗi", error);
+    }
+  };
+  console.log("bookingRoom...", bookingRoomLength);
+
+  // http://localhost:8080/room/roomstatus?status=true
 
   useEffect(() => {
     getrevenueApi();
   }, []);
   const getrevenueApi = async () => {
     try {
-      const res = await customAxios.get("/admin/bill/revenue/all");
+      const res = await customAxios.get("/booking/month");
       setrevenueState(res?.data);
     } catch (error) {
       console.log("Lỗi", error);
     }
   };
-  console.log("revenue...", revenueState?.data);
-  const amountRevenues = revenueState?.data.reduce((accumulator, object) => {
-    return accumulator + object.totalRevenue;
-  }, 0);
-  console.log("reve..", amountRevenues);
-  const sumRevenues = currencyFormat(amountRevenues);
+  console.log("revenue...", revenueState);
+  // const amountRevenues = revenueState?.data.reduce((accumulator, object) => {
+  //   return accumulator + object.totalRevenue;
+  // }, 0);
+  // console.log("reve..", amountRevenues);
+  // const sumRevenues = currencyFormat(amountRevenues);
 
   switch (type) {
     case "product":
       data = {
-        amount: amountProducts,
+        amount: roomStateLength?.length,
         title: "PHÒNG",
         isMoney: false,
         link: "See all rooms",
@@ -111,7 +127,7 @@ const Widget = ({ type, amount }) => {
       break;
     case "order":
       data = {
-        amount: amountBills,
+        amount: bookingLength?.length,
         title: "ĐƠN ĐẶT",
         isMoney: false,
         link: "View all orders",
@@ -128,7 +144,7 @@ const Widget = ({ type, amount }) => {
       break;
     case "earning":
       data = {
-        amount: sumRevenues,
+        // amount: sumRevenues,
         title: "DOANH THU",
         // isMoney: true,
         link: "View net earnings",
@@ -142,7 +158,8 @@ const Widget = ({ type, amount }) => {
       break;
     case "balance":
       data = {
-        title: "BALANCE",
+        amount: bookingRoomLength?.length,
+        title: "PHÒNG ĐANG ĐẶT",
         // isMoney: true,
         link: "See details",
         icon: (

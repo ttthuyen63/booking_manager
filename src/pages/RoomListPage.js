@@ -632,7 +632,8 @@ export default function RoomListPage() {
                           </td>
                           <td>{item?.maximum_quantity}</td>
                           <td>{currencyFormat(item?.price)}</td>
-                          <td>{countNestedArrayElements(item?.room_number)}</td>
+                          <td>{item?.room_number?.length}</td>
+                          {/* <td>{countNestedArrayElements(item?.room_number)}</td> */}
                           <td>
                             <button
                               onClick={() => getDetail(item?.id)}
