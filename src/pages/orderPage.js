@@ -201,9 +201,6 @@ export default function OrderPage() {
             </div>
 
             <div className="begin-item">
-              <Link className="btn-new" type="button" to="/addorder">
-                THÊM KHÁCH SẠN
-              </Link>
               <form className="form-inline w-50">
                 <select
                   className="browser-default custom-select mb-2 mr-3"

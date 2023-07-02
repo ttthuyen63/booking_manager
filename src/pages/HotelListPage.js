@@ -41,10 +41,13 @@ import {
 } from "reactstrap";
 import { Uploader } from "uploader";
 import { UploadButton } from "react-uploader";
+import "react-slideshow-image/dist/styles.css";
+import { Slide } from "react-slideshow-image";
 
 export default function HotelListPage() {
   const [hotelState, sethotelState] = useState(null);
   const [show, setShow] = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
   const [search, setSearch] = useState(hotelState);
   const [deleteId, setdeleteId] = useState("");
   const [deleteCode, setdeleteCode] = useState("");
@@ -56,6 +59,7 @@ export default function HotelListPage() {
   const [modal, setmodal] = useState(false);
   console.log("hotelState...", hotelState);
   const hotelList = useSelector((state) => state.hotelReducer);
+  const [detail, setDetail] = useState([]);
 
   const queryParams = new URLSearchParams(window.location.search);
   const dispatch = useDispatch();
@@ -72,7 +76,20 @@ export default function HotelListPage() {
     }
   };
 
-  console.log("test", hotelState);
+  // console.log("test", hotelState);
+
+  useEffect(() => {
+    getDetail();
+  }, []);
+  const getDetail = async (id) => {
+    try {
+      const detail = await customAxios.get(`/hotel/${id}`);
+      setDetail(detail?.data);
+    } catch (error) {}
+    setShowDetail(true);
+  };
+
+  console.log("detail..", detail);
 
   const handleEdit = (item) => {
     console.log("item...", item);
@@ -103,8 +120,9 @@ export default function HotelListPage() {
   //   navigate("/hotelList/" + code);
   // };
 
-  const goToDetail = () => {
-    navigate("/hotelDetail");
+  const goToDetail = (id) => {
+    setdeleteCode(id);
+    setShowDetail(true);
   };
 
   const handleChangeSearch = (e) => {
@@ -138,14 +156,40 @@ export default function HotelListPage() {
     apiKey: "free",
   });
 
+  const spanStyle = {
+    padding: "20px",
+    background: "#efefef",
+    color: "#000000",
+  };
+
+  const divStyle = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundSize: "cover",
+    height: "400px",
+  };
+  const slideImages = detail?.map((item) => {
+    return item?.images;
+
+    // {
+    //   url: "https://images.unsplash.com/photo-1506710507565-203b9f24669b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1536&q=80",
+    // },
+    // {
+    //   url: "https://images.unsplash.com/photo-1536987333706-fc9adfb10d91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
+    // },
+  });
+
+  console.log("slideimage...", slideImages[0]);
+
   return (
     <div>
       {show === false ? (
         <div>
           {hotelState?.map((item, index) => (
-            <Modal show={showDel} onHide={handleClose}>
+            <Modal isOpen={showDel} onHide={handleClose}>
               <ModalHeader closeButton>
-                {/* <div>Bạn có chắc là sẽ xóa?</div> */}
+                <div>Bạn có chắc là sẽ xóa?</div>
               </ModalHeader>
               <ModalBody>
                 Hành động này sẽ xóa dữ liệu vĩnh viễn, bạn hãy chắc chắn là sẽ
@@ -170,7 +214,7 @@ export default function HotelListPage() {
       ) : (
         <div>
           {search?.map((item, index) => (
-            <Modal show={showDel} onHide={handleClose}>
+            <Modal isOpen={showDel} onHide={handleClose}>
               <ModalHeader closeButton>
                 {/* <div>Bạn có chắc là sẽ xóa?</div> */}
               </ModalHeader>
@@ -196,6 +240,45 @@ export default function HotelListPage() {
           ))}
         </div>
       )}
+
+      <div>
+        {detail?.map((item, index) => (
+          <Modal
+            size="lg"
+            isOpen={showDetail}
+            toggle={() => setShowDetail(!showDetail)}
+          >
+            <ModalHeader toggle={() => setShowDetail(!showDetail)}>
+              {/* THÊM KHÁCH SẠN */}
+            </ModalHeader>
+            <ModalBody>
+              <form>
+                <Row>
+                  <Col lg={6}>
+                    <div className="slide-container">
+                      <Slide>
+                        {slideImages[0]?.map((slideImage, index) => (
+                          <div key={index}>
+                            <div
+                              style={{
+                                ...divStyle,
+                                backgroundImage: `${slideImage}`,
+                              }}
+                            ></div>
+                          </div>
+                        ))}
+                      </Slide>
+                    </div>
+                  </Col>
+                  <Col lg={6}>
+                    <h2>{item?.name}</h2>
+                  </Col>
+                </Row>
+              </form>
+            </ModalBody>
+          </Modal>
+        ))}
+      </div>
       <div>
         <Modal size="lg" isOpen={modal} toggle={() => setmodal(!modal)}>
           <ModalHeader toggle={() => setmodal(!modal)}>
@@ -354,7 +437,7 @@ export default function HotelListPage() {
                       <th scope="col">Quận/huyện</th>
                       <th scope="col">Thành phố</th>
                       <th scope="col">Đánh giá</th>
-                      {/* <th scope="col">Chỉnh sửa</th> */}
+                      <th scope="col">Xem thêm</th>
                       <th scope="col">Xóa</th>
                     </tr>
                   </thead>
@@ -371,25 +454,25 @@ export default function HotelListPage() {
                           <td>
                             <Star item={item?.start} />
                           </td>
-                          {/* <td>
+                          <td>
                             <button
-                              type="button"
-                              className="btn btn-secondary btn-xs"
-                              data-toggle="modal"
-                              data-target="#editModal"
+                              onClick={() => getDetail(item?.id)}
                               variant="primary"
-                              onClick={() => handleEdit(item)}
+                              type="button"
+                              className="btn btn-warning btn-xs"
+                              data-toggle="modal"
+                              data-target="#moreModal"
                             >
                               <span
                                 className={{
                                   dataToggle: Tooltip,
-                                  title: "Chỉnh sửa",
+                                  title: "Xem thêm",
                                 }}
                               >
-                                <FontAwesomeIcon icon={faPencilSquare} /> Sửa
+                                <FontAwesomeIcon icon={faStickyNote} /> Xem
                               </span>
                             </button>
-                          </td> */}
+                          </td>
 
                           <td>
                             <button

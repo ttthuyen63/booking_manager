@@ -11,7 +11,6 @@ import { Provider } from "react-redux";
 import "bootstrap/dist/css/bootstrap.css";
 import store from "./redux/store";
 import ProtectRouter from "./components/ProtectRouter";
-import ProductDetail from "./pages/roomDetail";
 import RoomListPage from "./pages/RoomListPage";
 import AddRoomPage from "./pages/AddRoomPage";
 import EditRoomPage from "./pages/EditRoomPage";
@@ -86,6 +85,7 @@ const router = createBrowserRouter([
       </ProtectRouter>
     ),
   },
+
   {
     path: "/login",
     element: <LoginPage />,
