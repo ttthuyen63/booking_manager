@@ -44,6 +44,8 @@ import { UploadButton } from "react-uploader";
 import "react-slideshow-image/dist/styles.css";
 import { Slide } from "react-slideshow-image";
 import { useRef } from "react";
+import FileResizer from "react-image-file-resizer";
+import HotelDetail from "./hotelDetail";
 
 export default function HotelListPage() {
   const [hotelState, sethotelState] = useState(null);
@@ -58,7 +60,7 @@ export default function HotelListPage() {
   const [isActiveOrder, setisActiveOrder] = useState(false);
   const [imagehotelData1, setImagehotelData1] = useState();
   const [modal, setmodal] = useState(false);
-  console.log("hotelState...", hotelState);
+  // console.log("hotelState...", hotelState);
   const hotelList = useSelector((state) => state.hotelReducer);
   const [detail, setDetail] = useState([]);
   const hotel_idRef = useRef(null);
@@ -66,6 +68,8 @@ export default function HotelListPage() {
   const provinceRef = useRef(null);
   const districtRef = useRef(null);
   const houseRef = useRef(null);
+  const hotel_descriptionRef = useRef(null);
+  const [base64Image, setBase64Image] = useState("");
 
   const queryParams = new URLSearchParams(window.location.search);
   const dispatch = useDispatch();
@@ -82,8 +86,6 @@ export default function HotelListPage() {
     }
   };
 
-  // console.log("test", hotelState);
-
   useEffect(() => {
     getDetail();
   }, []);
@@ -95,7 +97,7 @@ export default function HotelListPage() {
     setShowDetail(true);
   };
 
-  console.log("detail..", detail);
+  // console.log("detail..", detail);
 
   const handleEdit = (item) => {
     console.log("item...", item);
@@ -122,12 +124,9 @@ export default function HotelListPage() {
     }
     setshowDel(false);
   };
-  // const goToDetail = (code) => {
-  //   navigate("/hotelList/" + code);
-  // };
-
-  const goToDetail = (id) => {
-    setdeleteCode(id);
+  const goToDetail = (code) => {
+    navigate("/hotelList/" + code);
+    <HotelDetail />;
     setShowDetail(true);
   };
 
@@ -182,43 +181,85 @@ export default function HotelListPage() {
   //   return item?.images;
   // });
 
-  console.log("slideimage...", detail?.images);
+  // console.log("slideimage...", detail?.images);
 
   const [files, setFile] = useState();
-  const handleChangeFile = (event) => {
-    setFile(event.target.files);
-    console.log("img...", event.target.files);
-  };
+
+  // const fileNames = [];
+  // for (let i = 0; i < files?.length; i++) {
+  //   const file = files[i];
+  //   const fileName = file.name;
+  //   console.log("filename...", fileName); // Lấy tên tệp tin
+  // }
   const fileNames = [];
-  for (let i = 0; i < files?.length; i++) {
-    const file = files[i];
-    const fileName = file.name;
-    console.log("filename...", fileName); // Lấy tên tệp tin
-  }
+  const [base64Images, setBase64Images] = useState([]);
+
+  const handleChangeFile = (event) => {
+    const files = event.target.files;
+
+    for (let i = 0; i < files.length; i++) {
+      FileResizer.imageFileResizer(
+        files[i],
+        800, // chiều rộng mới
+        800, // chiều cao mới
+        "JPEG", // định dạng đầu ra
+        100, // chất lượng
+        0, // góc quay (0 là không quay)
+        (base64Image) => {
+          setBase64Images((prevImages) => [...prevImages, base64Image]);
+        },
+        "base64" // đầu ra là chuỗi base64
+      );
+    }
+  };
+
+  // const fileNames = [];
+  // for (let i = 0; i < files?.length; i++) {
+  //   const file = files[i];
+  //   const fileName = file.name;
+  //   console.log("filename...", fileName); // Lấy tên tệp tin
+  // }
 
   console.log("img...", files);
 
+  const outputImg = base64Images.map((item) => item.split(",")[1]);
+
   const handleSubmit = (e) => {
     e.preventDefault(); //chặn trước khi action đẩy dữ liệu lên thanh url
-    for (let i = 0; i < files?.length; i++) {
-      const file = files[i];
-      const fileName = file.name;
-      fileNames.push(fileName);
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
 
-      var raw = JSON.stringify({
-        id: hotel_idRef.current.value,
-        name: hotel_nameRef.current.value,
-        location: {
-          province: provinceRef.current.value,
-          district: districtRef.current.value,
-          address: houseRef.current.value,
-        },
+    // for (let i = 0; i < files?.length; i++) {
+    //   // const file = files[i];
+    //   // const fileName = file.name;
+    //   // fileNames.push(fileName);
+    //   FileResizer.imageFileResizer(
+    //     files[i],
+    //     800, // chiều rộng mới
+    //     800, // chiều cao mới
+    //     "JPEG", // định dạng đầu ra
+    //     100, // chất lượng
+    //     0, // góc quay (0 là không quay)
+    //     (base64Image) => {
+    //       setBase64Images(base64Image);
+    //     },
+    //     "base64" // đầu ra là chuỗi base64
+    //   );
 
-        images: fileNames,
-      });
-    }
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      id: hotel_idRef.current.value,
+      name: hotel_nameRef.current.value,
+      location: {
+        province: provinceRef.current.value,
+        district: districtRef.current.value,
+        address: houseRef.current.value,
+      },
+      description: hotel_descriptionRef.current.value,
+
+      images: outputImg,
+    });
+    // }
     var requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -228,9 +269,11 @@ export default function HotelListPage() {
 
     fetch("http://localhost:8080/hotel", requestOptions)
       .then((response) => response.text())
+      // .then((result) => console.log("success"))
       .then((result) => window.location.reload())
       .catch((error) => console.log("error", error));
   };
+  console.log("base64...", base64Images);
 
   const optionDistrict = [
     { value: "Hoàn Kiếm", label: "Hoàn Kiếm" },
@@ -297,7 +340,7 @@ export default function HotelListPage() {
       )}
 
       <div>
-        {detail?.map((item, index) => (
+        {/* {detail?.map((item, index) => (
           <Modal
             size="lg"
             isOpen={showDetail}
@@ -332,7 +375,8 @@ export default function HotelListPage() {
               </form>
             </ModalBody>
           </Modal>
-        ))}
+        ))} */}
+        {showDetail && <HotelDetail />}
       </div>
       <div>
         <Modal size="lg" isOpen={modal} toggle={() => setmodal(!modal)}>
@@ -348,7 +392,6 @@ export default function HotelListPage() {
                     ref={hotel_idRef}
                     type="text"
                     className="form-control"
-                    placeholder="Nhập mã khách sạn"
                   />
                 </Col>
                 <Col lg={12}>
@@ -357,7 +400,6 @@ export default function HotelListPage() {
                     ref={hotel_nameRef}
                     type="text"
                     className="form-control"
-                    placeholder="Nhập tên khách sạn"
                   />
                 </Col>
                 <Col lg={12}>
@@ -390,9 +432,29 @@ export default function HotelListPage() {
                   </Row>
                 </Col>
                 <Col lg={12}>
+                  <label>Mô tả</label>
+                  <input
+                    ref={hotel_descriptionRef}
+                    type="text"
+                    className="form-control"
+                  />
+                </Col>
+                <Col lg={12}>
                   <label>Hình ảnh: </label>
                   <br />
-                  <input type="file" multiple onChange={handleChangeFile} />
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/jpeg"
+                    onChange={handleChangeFile}
+                  />
+                  {/* {base64Image && (
+                    <img
+                      src={`data:image/jpeg;base64,${base64Image}`}
+                      alt="Uploaded"
+                    />
+                  )} */}
+
                   {/* <UploadButton
                     uploader={uploader}
                     options={{ multi: true }}
@@ -494,7 +556,7 @@ export default function HotelListPage() {
                       <th scope="col">Quận/huyện</th>
                       <th scope="col">Thành phố</th>
                       <th scope="col">Đánh giá</th>
-                      <th scope="col">Xem thêm</th>
+                      {/* <th scope="col">Xem thêm</th> */}
                       <th scope="col">Xóa</th>
                     </tr>
                   </thead>
@@ -511,9 +573,9 @@ export default function HotelListPage() {
                           <td>
                             <Star item={item?.start} />
                           </td>
-                          <td>
+                          {/* <td>
                             <button
-                              onClick={() => getDetail(item?.id)}
+                              onClick={() => goToDetail(item?.id)}
                               variant="primary"
                               type="button"
                               className="btn btn-warning btn-xs"
@@ -529,7 +591,7 @@ export default function HotelListPage() {
                                 <FontAwesomeIcon icon={faStickyNote} /> Xem
                               </span>
                             </button>
-                          </td>
+                          </td> */}
 
                           <td>
                             <button
@@ -568,7 +630,7 @@ export default function HotelListPage() {
                           <td>
                             <Star item={item?.start} />
                           </td>
-                          <td>
+                          {/* <td>
                             <button
                               onClick={() => getDetail(item?.id)}
                               variant="primary"
@@ -586,7 +648,7 @@ export default function HotelListPage() {
                                 <FontAwesomeIcon icon={faStickyNote} /> Xem
                               </span>
                             </button>
-                          </td>
+                          </td> */}
 
                           <td>
                             <button

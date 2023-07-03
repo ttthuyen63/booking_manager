@@ -185,8 +185,8 @@ export default function RoomListPage() {
   //   navigate("/roomList/" + code);
   // };
 
-  const goToDetail = () => {
-    navigate("/roomDetail");
+  const goToDetail = (code) => {
+    navigate("/roomDetail/" + code);
   };
 
   const phanloaibed = [
@@ -453,8 +453,7 @@ export default function RoomListPage() {
                   <label>Mã khách sạn</label>
                   <Select
                     // ref={categoryCodeRef}
-                    // options={hotelNameState}
-
+                    options={hotelNameState}
                     isClearable={true}
                     className="form-control"
                     value={hotelNameData}
@@ -642,7 +641,7 @@ export default function RoomListPage() {
                           {/* <td>{countNestedArrayElements(item?.room_number)}</td> */}
                           <td>
                             <button
-                              onClick={() => getDetail(item?.id)}
+                              onClick={() => goToDetail(item?.id)}
                               variant="primary"
                               type="button"
                               className="btn btn-warning btn-xs"

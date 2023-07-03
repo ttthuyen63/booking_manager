@@ -201,15 +201,11 @@ export default function OrderPage() {
             </div>
 
             <div className="begin-item">
-              <form className="form-inline w-50">
+              {/* <form className="form-inline w-50">
                 <select
                   className="browser-default custom-select mb-2 mr-3"
-                  // value={filterStatus}
                   onChange={handleChange}
                 >
-                  {/* <option selected disabled>
-                      Lọc theo danh mục
-                    </option> */}
                   <option value="">Tất cả</option>
                   {orderState?.map((item) => (
                     <option value={item?.location?.district}>
@@ -217,10 +213,8 @@ export default function OrderPage() {
                     </option>
                   ))}
 
-                  {/* <option value="trang-phuc_bong-da">Phòng đơn</option> */}
-                  {/* <option value="trang-phuc_bong-chuyen">Phòng đôi</option> */}
                 </select>
-              </form>
+              </form> */}
             </div>
             <div className="control-order">
               <div className="mt-3 control-order-table shadow-sm p-3 mb-5 bg-white rounded">
