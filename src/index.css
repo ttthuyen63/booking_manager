@@ -512,3 +512,17 @@ table {
 tbody {
   display: table-row-group;
 }
+
+.RoomAvailable {
+  text-align: center;
+  color: white;
+  background-color: rgb(33, 110, 58);
+  border-radius: 10px;
+}
+
+.RoomUnAvailable {
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+  background-color: rgb(47, 47, 133);
+}

@@ -45,6 +45,7 @@ import Room from "../components/Room";
 import { addListhotel } from "../redux/hotelSlice";
 import { useStepContext } from "@mui/material";
 import { useRef } from "react";
+import StatusRoom from "../components/StatusRoom";
 
 export default function RoomListPage() {
   const [roomState, setroomState] = useState(null);
@@ -132,29 +133,29 @@ export default function RoomListPage() {
 
   console.log("detail..", detail);
 
-  const filterData = (props) => {
-    props?.forEach((currentValue, index, arr) => {
-      let hotel_id = currentValue.hotel_id;
-      let room_name = currentValue.room_name;
+  // const filterData = (props) => {
+  //   props?.forEach((currentValue, index, arr) => {
+  //     let hotel_id = currentValue.hotel_id;
+  //     let room_name = currentValue.room_name;
 
-      let objIndex = arr.findIndex((item) => {
-        return item.hotel_id == hotel_id && item.room_name == room_name;
-      });
-      if (index == objIndex) {
-        currentValue.room_number = [currentValue.room_number];
-      } else {
-        if (!arr[objIndex].room_number.includes(currentValue.room_number)) {
-          arr[objIndex].room_number = [
-            ...arr[objIndex].room_number,
-            currentValue.room_number,
-          ];
-        }
+  //     let objIndex = arr.findIndex((item) => {
+  //       return item.hotel_id == hotel_id && item.room_name == room_name;
+  //     });
+  //     if (index == objIndex) {
+  //       currentValue.room_number = [currentValue.room_number];
+  //     } else {
+  //       if (!arr[objIndex].room_number.includes(currentValue.room_number)) {
+  //         arr[objIndex].room_number = [
+  //           ...arr[objIndex].room_number,
+  //           currentValue.room_number,
+  //         ];
+  //       }
 
-        currentValue.code = null;
-      }
-    });
-    return props?.filter((e) => e.code !== null);
-  };
+  //       currentValue.code = null;
+  //     }
+  //   });
+  //   return props?.filter((e) => e.code !== null);
+  // };
   const handleEdit = (item) => {
     console.log("item...", item);
     navigate("/editroom/" + item?.code, {
@@ -196,7 +197,8 @@ export default function RoomListPage() {
 
   const handleChangeSearch = (e) => {
     const query = e.target.value;
-    var searchList = [...filterData(roomState)];
+    var searchList = [...roomState];
+    // var searchList = [...filterData(roomState)];
     searchList = searchList?.filter((item) => {
       return item?.room_name?.toLowerCase().indexOf(query.toLowerCase()) !== -1;
     });
@@ -205,21 +207,22 @@ export default function RoomListPage() {
   };
   function getFilterList() {
     if (!filterroom) {
-      return filterData(roomState);
+      return roomState;
+      // return filterData(roomState);
     }
-    return filterData(roomState)?.filter(
+    return roomState?.filter(
+      // return filterData(roomState)?.filter(
       (item) => item?.hotel_id === filterroom
     );
   }
 
-  var filterList = useMemo(getFilterList, [filterroom, filterData(roomState)]);
+  var filterList = useMemo(getFilterList, [filterroom, roomState]);
+  // var filterList = useMemo(getFilterList, [filterroom, filterData(roomState)]);
   function handleChange(event) {
     setfilterroom(event.target.value);
   }
 
   const navigate = useNavigate();
-
-  console.log("filterdata...", filterData(roomState));
 
   const uploader = new Uploader({
     // Get production API keys from Upload.io
@@ -341,16 +344,17 @@ export default function RoomListPage() {
     return count;
   }
 
-  const optionDistrict = [
-    { value: "Hoàn Kiếm", label: "Hoàn Kiếm" },
-    { value: "Hà Đông", label: "Hà Đông" },
-  ];
+  const IdHotelList = roomState?.map((item) => {
+    return item?.hotel_id;
+  });
+  const uniqueArr = Array.from(new Set(IdHotelList));
+  console.log("provinceList", uniqueArr);
 
   return (
     <div>
       {show === false ? (
         <div>
-          {filterData(roomState)?.map((item, index) => (
+          {roomState?.map((item, index) => (
             <Modal isOpen={showDel} onHide={handleClose}>
               <ModalHeader closeButton>
                 <div>Bạn có chắc là sẽ xóa?</div>
@@ -579,24 +583,20 @@ export default function RoomListPage() {
                 THÊM PHÒNG
               </button>
               <form className="form-inline w-50">
-                <Select
+                <select
                   className="browser-default custom-select mb-2 mr-3"
-                  // value={filterStatus}
                   onChange={handleChange}
                 >
-                  {/* <option selected disabled>
-                      Lọc theo danh mục
-                    </option> */}
+                  <option selected disabled>
+                    Lọc theo Khách sạn
+                  </option>
                   <option value="">Tất cả</option>
-                  {/* {filterData(roomState)?.map((item) => (
-                    <option value={item?.location?.district}>
-                      {item?.location?.district}
-                    </option>
-                  ))} */}
+                  {uniqueArr?.map((item) => (
+                    <option value={item}>{item}</option>
+                  ))}
 
-                  {/* <option value="trang-phuc_bong-da">Phòng đơn</option> */}
                   {/* <option value="trang-phuc_bong-chuyen">Phòng đôi</option> */}
-                </Select>
+                </select>
               </form>
             </div>
             <div className="control-hotel">
@@ -618,10 +618,11 @@ export default function RoomListPage() {
                       <th scope="col">Mã khách sạn</th>
                       <th scope="col">Tên phòng</th>
                       <th scope="col">Phân loại</th>
+                      <th scope="col">Số phòng</th>
                       <th scope="col">Giới hạn</th>
                       <th scope="col">Giá</th>
-                      <th scope="col">Số lượng phòng</th>
-                      <th scope="col">Xem thêm</th>
+                      {/* <th scope="col">Số lượng phòng</th> */}
+                      <th scope="col">Tình trạng</th>
                       {/* <th scope="col">Xóa</th> */}
                     </tr>
                   </thead>
@@ -635,11 +636,15 @@ export default function RoomListPage() {
                           <td>
                             <Room item={item?.number_bed} />
                           </td>
+                          <td>{item?.room_number}</td>
                           <td>{item?.maximum_quantity}</td>
                           <td>{currencyFormat(item?.price)}</td>
-                          <td>{item?.room_number?.length}</td>
-                          {/* <td>{countNestedArrayElements(item?.room_number)}</td> */}
                           <td>
+                            <StatusRoom item={item?.status} />
+                          </td>
+                          {/* <td>{item?.room_number?.length}</td> */}
+                          {/* <td>{countNestedArrayElements(item?.room_number)}</td> */}
+                          {/* <td>
                             <button
                               onClick={() => goToDetail(item?.id)}
                               variant="primary"
@@ -657,7 +662,7 @@ export default function RoomListPage() {
                                 <FontAwesomeIcon icon={faStickyNote} /> Xem
                               </span>
                             </button>
-                          </td>
+                          </td> */}
                         </tr>
                       ))}
                       <div></div>
