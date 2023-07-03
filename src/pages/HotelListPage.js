@@ -45,7 +45,6 @@ import "react-slideshow-image/dist/styles.css";
 import { Slide } from "react-slideshow-image";
 import { useRef } from "react";
 import FileResizer from "react-image-file-resizer";
-import HotelDetail from "./hotelDetail";
 
 export default function HotelListPage() {
   const [hotelState, sethotelState] = useState(null);
@@ -97,7 +96,7 @@ export default function HotelListPage() {
     setShowDetail(true);
   };
 
-  // console.log("detail..", detail);
+  console.log("hotelState..", hotelState);
 
   const handleEdit = (item) => {
     console.log("item...", item);
@@ -126,7 +125,6 @@ export default function HotelListPage() {
   };
   const goToDetail = (code) => {
     navigate("/hotelList/" + code);
-    <HotelDetail />;
     setShowDetail(true);
   };
 
@@ -147,7 +145,7 @@ export default function HotelListPage() {
       return hotelState;
     }
     return hotelState?.filter(
-      (item) => item?.location?.district === filterhotel
+      (item) => item?.location?.province === filterhotel
     );
   }
 
@@ -275,10 +273,11 @@ export default function HotelListPage() {
   };
   console.log("base64...", base64Images);
 
-  const optionDistrict = [
-    { value: "Hoàn Kiếm", label: "Hoàn Kiếm" },
-    { value: "Hà Đông", label: "Hà Đông" },
-  ];
+  const provinceList = hotelState?.map((item) => {
+    return item?.location?.province;
+  });
+  const uniqueArr = Array.from(new Set(provinceList));
+  console.log("provinceList", uniqueArr);
 
   return (
     <div>
@@ -376,7 +375,6 @@ export default function HotelListPage() {
             </ModalBody>
           </Modal>
         ))} */}
-        {showDetail && <HotelDetail />}
       </div>
       <div>
         <Modal size="lg" isOpen={modal} toggle={() => setmodal(!modal)}>
@@ -513,25 +511,21 @@ export default function HotelListPage() {
                 THÊM KHÁCH SẠN
               </button>
               <form className="form-inline w-50">
-                <Select
+                <select
                   className="browser-default custom-select mb-2 mr-3"
-                  // value={filterStatus}
                   onChange={handleChange}
-                  options={optionDistrict}
                 >
-                  {/* <option selected disabled>
-                      Lọc theo danh mục
-                    </option> */}
+                  <option selected disabled>
+                    Lọc theo Thành phố
+                  </option>
                   <option value="">Tất cả</option>
-                  {/* {hotelState?.map((item) => (
-                    <option value={item?.location?.district}>
-                      {item?.location?.district}
-                    </option>
-                  ))} */}
+                  {uniqueArr?.map((item) => (
+                    <option value={item}>{item}</option>
+                  ))}
 
                   {/* <option value="trang-phuc_bong-da">Phòng đơn</option> */}
                   {/* <option value="trang-phuc_bong-chuyen">Phòng đôi</option> */}
-                </Select>
+                </select>
               </form>
             </div>
             <div className="control-hotel">
