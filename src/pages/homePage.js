@@ -38,6 +38,7 @@ import SideBar from "../components/Sidebar";
 import sidebar_menu from "../constants/sidebar-menu";
 import Chart from "react-apexcharts";
 import { currencyFormat } from "../ultils/constant";
+import { DataGrid } from "@mui/x-data-grid";
 
 export default function HomePage() {
   // const [first, setfirst] = useState(second);
@@ -63,6 +64,8 @@ export default function HomePage() {
     }
   };
 
+  console.log("money...", moneyState);
+
   useEffect(() => {
     getorderApi();
   }, []);
@@ -75,7 +78,6 @@ export default function HomePage() {
     }
   };
 
-  console.log("money...", moneyState);
   // const getproductApi = async () => {
   //   try {
   //     const res = await customAxios.get("/lbm/v1/users/get-all");
@@ -86,6 +88,19 @@ export default function HomePage() {
   //   }
   // };
 
+  const doanhthu = moneyState?.map((item) => {
+    return item?.money;
+  });
+  console.log("doanhthu", doanhthu);
+  const calculateSum = () => {
+    let sum = 0;
+    doanhthu?.forEach((number) => {
+      sum += number;
+    });
+    return sum;
+  };
+  console.log("Tổng", calculateSum(doanhthu));
+
   const [state, setState] = useState({
     options: {
       colors: ["#E91E63", "#FF9800"],
@@ -93,13 +108,21 @@ export default function HomePage() {
         id: "basic-bar",
       },
       xaxis: {
-        categories: ["Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7"],
+        categories: [
+          "Tháng 2",
+          "Tháng 3",
+          "Tháng 4",
+          "Tháng 5",
+          "Tháng 6",
+          "Tháng 7",
+        ],
       },
     },
     series: [
       {
         name: "Doanh thu",
-        data: [30, 40, 45, 50, 49],
+        data: doanhthu,
+        // data: [30, 40, 45, 50, 49],
       },
       // {
       //   name: "People Died",
@@ -112,11 +135,11 @@ export default function HomePage() {
   console.log("lastest...", latestOrders);
   return (
     <div className="row">
-      <div className="col-sm-2" style={{ padding: 0 }}>
+      <div className="col-sm-3" style={{ padding: 0 }}>
         <SideBar menu={sidebar_menu} />
       </div>
 
-      <div className="col-sm-10" style={{ padding: 0 }}>
+      <div className="col-sm-9" style={{ padding: 0 }}>
         <div className="content">
           <div className="content-header">
             <h5 className="content-account">
@@ -133,15 +156,15 @@ export default function HomePage() {
           </div>
 
           <div style={{ textAlign: "center" }}>
-            <img
+            {/* <img
               // src={require("../assets/images/e2.png")}
               src={require("../Logo-Hoc-Vien-Ky-Thuat-Mat-Ma-ACTVN-1.png")}
               style={{ width: "200px" }}
-            />
+            /> */}
           </div>
-          <h2 className="mt-4" style={{ textAlign: "center" }}>
+          <h1 className="mt-4" style={{ textAlign: "center" }}>
             Thống kê
-          </h2>
+          </h1>
 
           <div className="row statisc">
             <div className="col-1"></div>
@@ -155,31 +178,39 @@ export default function HomePage() {
                 <Widget type="order" />
               </div>
             </div>
-            {/* <h1>
-              React Charts Demo <i class="fas fa-user"></i>{" "}
-            </h1> */}
-            {/* <div className="col-4">
-                <Chart
-                  options={state.options}
-                  series={state.series}
-                  type="bar"
-                  width="450"
-                />
-              </div> */}
-
-            <div className="col-5">
-              <Chart
-                options={state.options}
-                series={state.series}
-                type="area"
-                width="450"
-              />
+            <div className="col-1"></div>
+            <div className="col-3">
+              <h3>Doanh thu</h3>
+              <table className="table recently-violated">
+                <thead>
+                  <tr>
+                    <th scope="col">Tháng</th>
+                    <th scope="col">Doanh thu</th>
+                  </tr>
+                </thead>
+                <tbody id="myTable">
+                  <td>
+                    <tr>Tháng 2</tr>
+                    <tr>Tháng 3</tr>
+                    <tr>Tháng 4</tr>
+                    <tr>Tháng 5</tr>
+                    <tr>Tháng 6</tr>
+                    <tr>Tháng 7</tr>
+                  </td>
+                  <td>
+                    {moneyState?.map((item, index) => (
+                      <tr>{currencyFormat(item?.money)}</tr>
+                    ))}
+                  </td>
+                  <div></div>
+                </tbody>
+              </table>
             </div>
           </div>
           <h2 style={{ textAlign: "center" }}>Danh sách các đơn mới nhất</h2>
           <div className="row">
-            <div className="col-2"></div>
-            <div className="col-9">
+            <div className="col-1"></div>
+            <div className="col-10">
               <table className="table recently-violated">
                 <thead>
                   <tr>

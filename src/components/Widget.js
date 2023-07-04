@@ -100,7 +100,22 @@ const Widget = ({ type, amount }) => {
       console.log("Lỗi", error);
     }
   };
-  console.log("revenue...", revenueState);
+  console.log("doanhthu", revenueState);
+  const doanhthu = revenueState?.map((item) => {
+    return item?.money;
+  });
+  const calculateSum = () => {
+    let sum = 0;
+    doanhthu?.forEach((number) => {
+      sum += number;
+    });
+    return sum;
+  };
+  console.log("revenue...", calculateSum(doanhthu));
+
+  const sumdoanhthu = currencyFormat(calculateSum(doanhthu));
+  console.log("sumdoanhthu", sumdoanhthu);
+
   // const amountRevenues = revenueState?.data.reduce((accumulator, object) => {
   //   return accumulator + object.totalRevenue;
   // }, 0);
@@ -144,7 +159,7 @@ const Widget = ({ type, amount }) => {
       break;
     case "earning":
       data = {
-        // amount: sumRevenues,
+        amount: sumdoanhthu,
         title: "DOANH THU",
         // isMoney: true,
         link: "View net earnings",

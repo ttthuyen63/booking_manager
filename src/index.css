@@ -526,3 +526,7 @@ tbody {
   color: white;
   background-color: rgb(47, 47, 133);
 }
+
+tr {
+  padding: 20px;
+}
