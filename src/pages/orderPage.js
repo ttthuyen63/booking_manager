@@ -35,14 +35,10 @@ export default function OrderPage() {
   const [orderState, setorderState] = useState(null);
   const [show, setShow] = useState(false);
   const [search, setSearch] = useState(orderState);
-  const [deleteId, setdeleteId] = useState("");
   const [deleteCode, setdeleteCode] = useState("");
   const [filterorder, setfilterorder] = useState();
   const [showDel, setshowDel] = useState(false);
-  const [isActiveorder, setisActiveorder] = useState(false);
   const [isActiveOrder, setisActiveOrder] = useState(false);
-  const [imageorderData1, setImageorderData1] = useState();
-  const [sortedOrders, setSortedOrders] = useState(orderState);
 
   console.log("orderState...", orderState);
   const orderList = useSelector((state) => state.orderReducer);
@@ -89,13 +85,6 @@ export default function OrderPage() {
     }
     setshowDel(false);
   };
-  // const goToDetail = (code) => {
-  //   navigate("/orderList/" + code);
-  // };
-
-  const goToDetail = () => {
-    navigate("/orderDetail");
-  };
 
   const handleChangeSearch = (e) => {
     const query = e.target.value;
@@ -122,10 +111,17 @@ export default function OrderPage() {
   }
 
   const navigate = useNavigate();
+
+  const [sortedOrders, setSortedOrders] = useState([]);
+  const [sortedData, setsortedData] = useState();
+
   const handleSort = () => {
-    const sorted = [...sortedOrders].sort((a, b) => b.id - a.id);
+    const sortedData = orderState;
+    const sorted = [...sortedData].sort((a, b) => b.id - a.id);
     setSortedOrders(sorted);
+    setShow((prevShow) => !prevShow);
   };
+  console.log("sort...", sortedOrders);
 
   return (
     <div>
@@ -207,7 +203,7 @@ export default function OrderPage() {
 
             <div className="begin-item">
               <div className="begin-item">
-                <button className="btn-new" type="button">
+                <button className="btn-new" type="button" onClick={handleSort}>
                   Mới nhất
                 </button>
               </div>
@@ -243,7 +239,7 @@ export default function OrderPage() {
                   {/* ----------------------------------------- */}
                   {show === false ? (
                     <tbody id="myTable">
-                      {filterList?.map((item, index) => (
+                      {orderState?.map((item, index) => (
                         <tr>
                           <td>HĐ{item?.id}</td>
                           <td>{item?.hotel_id}</td>
@@ -334,14 +330,17 @@ export default function OrderPage() {
                   )}
                   {show === true ? (
                     <tbody id="myTable">
-                      {search?.map((item, index) => (
+                      {sortedOrders?.map((item, index) => (
                         <tr>
-                          <td>{item?.id}</td>
-                          <td>{item?.name}</td>
-                          <td>{item?.location?.address}</td>
-                          <td>{item?.location?.district}</td>
-                          <td>{item?.location?.province}</td>
-                          <td>{item?.start}</td>
+                          <td>HĐ{item?.id}</td>
+                          <td>{item?.hotel_id}</td>
+                          <td>{item?.room_name}</td>
+                          <td>{item?.room_number}</td>
+                          <td>{item?.customer_name}</td>
+                          <td>{item?.customer_phone}</td>
+                          <td>{item?.start_date}</td>
+                          <td>{item?.end_date}</td>
+                          <td>{currencyFormat(item?.price)}</td>
                           {/* <td>
                             <button
                               onClick={() => goToDetail(item.code)}
@@ -394,25 +393,6 @@ export default function OrderPage() {
                               </span>
                             </button>
                           </td> */}
-                          <td>
-                            <button
-                              type="button"
-                              className="btn btn-secondary btn-xs"
-                              data-toggle="modal"
-                              data-target="#editModal"
-                              variant="primary"
-                              onClick={() => handleEdit(item)}
-                            >
-                              <span
-                                className={{
-                                  dataToggle: Tooltip,
-                                  title: "Chỉnh sửa",
-                                }}
-                              >
-                                <FontAwesomeIcon icon={faPencilSquare} /> Sửa
-                              </span>
-                            </button>
-                          </td>
 
                           <td>
                             <button
@@ -428,7 +408,7 @@ export default function OrderPage() {
                                   title: "Xóa",
                                 }}
                               >
-                                <FontAwesomeIcon icon={faTrash} /> Xóa
+                                <FontAwesomeIcon icon={faTrash} /> Hủy
                               </span>
                             </button>
                           </td>
