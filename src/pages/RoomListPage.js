@@ -324,7 +324,7 @@ export default function RoomListPage() {
 
     fetch("http://localhost:8080/room", requestOptions)
       .then((response) => response.text())
-      .then((result) => console.log(result))
+      .then((result) => window.location.reload())
       .catch((error) => console.log("error", error));
   };
 
@@ -619,7 +619,7 @@ export default function RoomListPage() {
                       <th scope="col">Tên phòng</th>
                       <th scope="col">Phân loại</th>
                       <th scope="col">Số phòng</th>
-                      <th scope="col">Giới hạn</th>
+                      {/* <th scope="col">Giới hạn</th> */}
                       <th scope="col">Giá</th>
                       {/* <th scope="col">Số lượng phòng</th> */}
                       <th scope="col">Tình trạng</th>
@@ -637,7 +637,7 @@ export default function RoomListPage() {
                             <Room item={item?.number_bed} />
                           </td>
                           <td>{item?.room_number}</td>
-                          <td>{item?.maximum_quantity}</td>
+                          {/* <td>{item?.maximum_quantity}</td> */}
                           <td>{currencyFormat(item?.price)}</td>
                           <td>
                             <StatusRoom item={item?.status} />
@@ -679,13 +679,17 @@ export default function RoomListPage() {
                           <td>
                             <Room item={item?.number_bed} />
                           </td>
-                          <td>{item?.maximum_quantity}</td>
+                          <td>{item?.room_number}</td>
+                          {/* <td>{item?.maximum_quantity}</td> */}
                           <td>{currencyFormat(item?.price)}</td>
-                          <td>{item?.room_number?.length}</td>
-                          {/* <td>{countNestedArrayElements(item?.room_number)}</td> */}
                           <td>
+                            <StatusRoom item={item?.status} />
+                          </td>
+                          {/* <td>{item?.room_number?.length}</td> */}
+                          {/* <td>{countNestedArrayElements(item?.room_number)}</td> */}
+                          {/* <td>
                             <button
-                              onClick={() => getDetail(item?.id)}
+                              onClick={() => goToDetail(item?.id)}
                               variant="primary"
                               type="button"
                               className="btn btn-warning btn-xs"
@@ -701,7 +705,7 @@ export default function RoomListPage() {
                                 <FontAwesomeIcon icon={faStickyNote} /> Xem
                               </span>
                             </button>
-                          </td>
+                          </td> */}
                         </tr>
                       ))}
                     </tbody>

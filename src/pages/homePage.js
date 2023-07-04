@@ -37,6 +37,7 @@ import Widget from "../components/Widget";
 import SideBar from "../components/Sidebar";
 import sidebar_menu from "../constants/sidebar-menu";
 import Chart from "react-apexcharts";
+import { currencyFormat } from "../ultils/constant";
 
 export default function HomePage() {
   // const [first, setfirst] = useState(second);
@@ -47,6 +48,8 @@ export default function HomePage() {
   const [isActiveOrder, setisActiveOrder] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [orderState, setorderState] = useState(null);
+
   useEffect(() => {
     getmoneyApi();
   }, []);
@@ -57,6 +60,18 @@ export default function HomePage() {
       setmoneyState(res?.data);
     } catch (error) {
       console.log("Lỗi");
+    }
+  };
+
+  useEffect(() => {
+    getorderApi();
+  }, []);
+  const getorderApi = async () => {
+    try {
+      const res = await customAxios.get("/booking/list");
+      setorderState(res?.data);
+    } catch (error) {
+      console.log("Lỗi", error);
     }
   };
 
@@ -93,6 +108,8 @@ export default function HomePage() {
     ],
   });
 
+  const latestOrders = orderState.slice(-5);
+  console.log("lastest...", latestOrders);
   return (
     <div className="row">
       <div className="col-sm-2" style={{ padding: 0 }}>
@@ -157,6 +174,44 @@ export default function HomePage() {
                 type="area"
                 width="450"
               />
+            </div>
+          </div>
+          <h2 style={{ textAlign: "center" }}>Danh sách các đơn mới nhất</h2>
+          <div className="row">
+            <div className="col-2"></div>
+            <div className="col-9">
+              <table className="table recently-violated">
+                <thead>
+                  <tr>
+                    <th scope="col">Mã đơn hàng</th>
+                    <th scope="col">Mã khách sạn</th>
+                    <th scope="col">Tên phòng</th>
+                    <th scope="col">Số phòng</th>
+                    <th scope="col">Họ tên KH</th>
+                    <th scope="col">SĐT</th>
+                    <th scope="col">Ngày đến</th>
+                    <th scope="col">Ngày đi</th>
+                    <th scope="col">Tổng giá</th>
+                  </tr>
+                </thead>
+                {/* ----------------------------------------- */}
+                <tbody id="myTable">
+                  {latestOrders?.map((item, index) => (
+                    <tr>
+                      <td>HĐ{item?.id}</td>
+                      <td>{item?.hotel_id}</td>
+                      <td>{item?.room_name}</td>
+                      <td>{item?.room_number}</td>
+                      <td>{item?.customer_name}</td>
+                      <td>{item?.customer_phone}</td>
+                      <td>{item?.start_date}</td>
+                      <td>{item?.end_date}</td>
+                      <td>{currencyFormat(item?.price)}</td>
+                    </tr>
+                  ))}
+                  <div></div>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

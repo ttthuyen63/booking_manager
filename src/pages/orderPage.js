@@ -42,6 +42,7 @@ export default function OrderPage() {
   const [isActiveorder, setisActiveorder] = useState(false);
   const [isActiveOrder, setisActiveOrder] = useState(false);
   const [imageorderData1, setImageorderData1] = useState();
+  const [sortedOrders, setSortedOrders] = useState(orderState);
 
   console.log("orderState...", orderState);
   const orderList = useSelector((state) => state.orderReducer);
@@ -121,6 +122,10 @@ export default function OrderPage() {
   }
 
   const navigate = useNavigate();
+  const handleSort = () => {
+    const sorted = [...sortedOrders].sort((a, b) => b.id - a.id);
+    setSortedOrders(sorted);
+  };
 
   return (
     <div>
@@ -201,20 +206,11 @@ export default function OrderPage() {
             </div>
 
             <div className="begin-item">
-              {/* <form className="form-inline w-50">
-                <select
-                  className="browser-default custom-select mb-2 mr-3"
-                  onChange={handleChange}
-                >
-                  <option value="">Tất cả</option>
-                  {orderState?.map((item) => (
-                    <option value={item?.location?.district}>
-                      {item?.location?.district}
-                    </option>
-                  ))}
-
-                </select>
-              </form> */}
+              <div className="begin-item">
+                <button className="btn-new" type="button">
+                  Mới nhất
+                </button>
+              </div>
             </div>
             <div className="control-order">
               <div className="mt-3 control-order-table shadow-sm p-3 mb-5 bg-white rounded">
