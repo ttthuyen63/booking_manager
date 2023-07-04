@@ -78,7 +78,7 @@ export default function OrderPage() {
 
   const handleDelete = async () => {
     try {
-      await customAxios.delete(`/order/${deleteCode}`);
+      await customAxios.delete(`/booking?id=${deleteCode}`);
       getorderApi();
     } catch (error) {
       console.log("Lỗi", error);

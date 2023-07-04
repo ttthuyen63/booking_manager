@@ -46,6 +46,7 @@ import { addListhotel } from "../redux/hotelSlice";
 import { useStepContext } from "@mui/material";
 import { useRef } from "react";
 import StatusRoom from "../components/StatusRoom";
+import FileResizer from "react-image-file-resizer";
 
 export default function RoomListPage() {
   const [roomState, setroomState] = useState(null);
@@ -167,15 +168,15 @@ export default function RoomListPage() {
     setshowDel(false);
   };
 
-  const handleClickDelete = () => {
-    setdeleteCode();
+  const handleClickDelete = (id) => {
+    setdeleteCode(id);
     setshowDel(true);
   };
 
   const handleDelete = async () => {
     // console.log("id: ", deleteId);
     try {
-      await customAxios.post(`/room?id=${deleteCode}`);
+      await customAxios.delete(`/room?id=${deleteCode}`);
       getroomApi();
     } catch (error) {
       console.log("Lỗi", error);
@@ -261,10 +262,10 @@ export default function RoomListPage() {
     setphanloaiData(e);
   };
 
-  const handleChangeFile = (event) => {
-    setFile(event.target.files);
-    console.log("img...", event.target.files);
-  };
+  // const handleChangeFile = (event) => {
+  //   setFile(event.target.files);
+  //   console.log("img...", event.target.files);
+  // };
 
   const fileNames = [];
   for (let i = 0; i < files?.length; i++) {
@@ -294,27 +295,46 @@ export default function RoomListPage() {
   const randomID = generatedNumbers?.toString();
   console.log("random...", randomID);
 
+  const [base64Images, setBase64Images] = useState([]);
+
+  const handleChangeFile = (event) => {
+    const files = event.target.files;
+
+    for (let i = 0; i < files.length; i++) {
+      FileResizer.imageFileResizer(
+        files[i],
+        800, // chiều rộng mới
+        800, // chiều cao mới
+        "JPEG", // định dạng đầu ra
+        100, // chất lượng
+        0, // góc quay (0 là không quay)
+        (base64Image) => {
+          setBase64Images((prevImages) => [...prevImages, base64Image]);
+        },
+        "base64" // đầu ra là chuỗi base64
+      );
+    }
+  };
+
+  const outputImg = base64Images.map((item) => item.split(",")[1]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    for (let i = 0; i < files?.length; i++) {
-      const file = files[i];
-      const fileName = file.name;
-      fileNames.push(fileName);
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-      var raw = JSON.stringify({
-        id: randomID,
-        hotel_id: hotelNameData?.value,
-        room_number: room_numberRef.current.value,
-        room_name: room_nameRef.current.value,
-        number_bed: phanloaiData?.value,
-        maximum_quantity: maxpeopleRef.current.value,
-        price: priceRef.current.value,
-        description: descriptionRef.current.value,
-        listURL: fileNames,
-      });
-    }
+    var raw = JSON.stringify({
+      id: randomID,
+      hotel_id: hotelNameData?.value,
+      room_number: room_numberRef.current.value,
+      room_name: room_nameRef.current.value,
+      number_bed: phanloaiData?.value,
+      maximum_quantity: maxpeopleRef.current.value,
+      price: priceRef.current.value,
+      description: descriptionRef.current.value,
+      listURL: outputImg,
+    });
+
     var requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -456,12 +476,10 @@ export default function RoomListPage() {
                 <Col lg={12}>
                   <label>Mã khách sạn</label>
                   <Select
-                    // ref={categoryCodeRef}
                     options={hotelNameState}
                     isClearable={true}
                     className="form-control"
                     value={hotelNameData}
-                    // placeholder="Chọn khách sạn"
                     onChange={handleChangeHotelName}
                   />
                 </Col>
@@ -471,7 +489,6 @@ export default function RoomListPage() {
                     ref={room_nameRef}
                     type="text"
                     className="form-control"
-                    // placeholder="Nhập tên phòng"
                   />
                 </Col>
                 <Col lg={12}>
@@ -480,18 +497,12 @@ export default function RoomListPage() {
                     ref={room_numberRef}
                     type="text"
                     className="form-control"
-                    // placeholder="Nhập số phòng"
                   />
                 </Col>
                 <Col lg={12}>
                   <label>Phân loại phòng</label>
                   <br></br>
-                  {/* <input
-                    // ref={nameRef}
-                    // type="text"
-                    // className="form-control"
-                    
-                  /> */}
+
                   <Select
                     // ref={categoryCodeRef}
                     options={phanloaibed}
@@ -623,7 +634,7 @@ export default function RoomListPage() {
                       <th scope="col">Giá</th>
                       {/* <th scope="col">Số lượng phòng</th> */}
                       <th scope="col">Tình trạng</th>
-                      {/* <th scope="col">Xóa</th> */}
+                      <th scope="col">Xóa</th>
                     </tr>
                   </thead>
                   {/* ----------------------------------------- */}
@@ -641,6 +652,24 @@ export default function RoomListPage() {
                           <td>{currencyFormat(item?.price)}</td>
                           <td>
                             <StatusRoom item={item?.status} />
+                          </td>
+                          <td>
+                            <button
+                              type="button"
+                              className="btn btn-danger btn-xs"
+                              data-toggle="modal"
+                              data-target="#delModal"
+                              onClick={() => handleClickDelete(item?.id)}
+                            >
+                              <span
+                                className={{
+                                  dataToggle: Tooltip,
+                                  title: "Xóa",
+                                }}
+                              >
+                                <FontAwesomeIcon icon={faTrash} /> Xóa
+                              </span>
+                            </button>
                           </td>
                           {/* <td>{item?.room_number?.length}</td> */}
                           {/* <td>{countNestedArrayElements(item?.room_number)}</td> */}
@@ -684,6 +713,24 @@ export default function RoomListPage() {
                           <td>{currencyFormat(item?.price)}</td>
                           <td>
                             <StatusRoom item={item?.status} />
+                          </td>
+                          <td>
+                            <button
+                              type="button"
+                              className="btn btn-danger btn-xs"
+                              data-toggle="modal"
+                              data-target="#delModal"
+                              onClick={() => handleClickDelete(item?.id)}
+                            >
+                              <span
+                                className={{
+                                  dataToggle: Tooltip,
+                                  title: "Xóa",
+                                }}
+                              >
+                                <FontAwesomeIcon icon={faTrash} /> Xóa
+                              </span>
+                            </button>
                           </td>
                           {/* <td>{item?.room_number?.length}</td> */}
                           {/* <td>{countNestedArrayElements(item?.room_number)}</td> */}

@@ -108,7 +108,7 @@ export default function HomePage() {
     ],
   });
 
-  const latestOrders = orderState.slice(-5);
+  const latestOrders = orderState?.slice(-5);
   console.log("lastest...", latestOrders);
   return (
     <div className="row">
