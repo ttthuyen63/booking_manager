@@ -4,22 +4,22 @@ const StatusRoom = (props) => {
   const { item } = props;
 
   console.log("item...", item);
-  if (item == false) {
+  if (item == true) {
     return (
       <div
         className="RoomAvailable"
         style={{ color: "#fff  !important", background: "green !important" }}
       >
-        {item === false ? "Đang trống" : ""}
+        {item === true ? "Đang trống" : ""}
       </div>
     );
-  } else if (item == true) {
+  } else if (item == false) {
     return (
       <div
         className="RoomUnAvailable"
         style={{ color: "#fff  !important", background: "blue !important" }}
       >
-        {item === true ? "Đã được đặt" : ""}
+        {item === false ? "Đã được đặt" : ""}
       </div>
     );
   }

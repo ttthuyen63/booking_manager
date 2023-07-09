@@ -74,7 +74,7 @@ export default function RoomListPage() {
   const [files, setFile] = useState();
   const [phanloai, setphanloai] = useState();
   const [phanloaiData, setphanloaiData] = useState();
-
+  
   console.log("roomState...", roomState);
   const roomList = useSelector((state) => state.roomReducer);
 

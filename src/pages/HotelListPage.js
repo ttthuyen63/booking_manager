@@ -45,6 +45,7 @@ import "react-slideshow-image/dist/styles.css";
 import { Slide } from "react-slideshow-image";
 import { useRef } from "react";
 import FileResizer from "react-image-file-resizer";
+import axios from "axios";
 
 export default function HotelListPage() {
   const [hotelState, sethotelState] = useState(null);
@@ -69,7 +70,9 @@ export default function HotelListPage() {
   const houseRef = useRef(null);
   const hotel_descriptionRef = useRef(null);
   const [base64Image, setBase64Image] = useState("");
-
+  const [cities, setCities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
   const queryParams = new URLSearchParams(window.location.search);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -84,6 +87,7 @@ export default function HotelListPage() {
       console.log("Lỗi", error);
     }
   };
+  console.log("hotel,,,,", hotelState);
 
   useEffect(() => {
     getDetail();
@@ -97,6 +101,29 @@ export default function HotelListPage() {
   };
 
   console.log("hotelState..", hotelState);
+
+  useEffect(() => {
+    // Lấy danh sách thành phố từ API
+    axios
+      .get("https://provinces.open-api.vn/api/?depth=2")
+      .then((response) => {
+        setCities(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const handleCityChange = (e) => {
+    const cityId = e.target.value;
+    setSelectedCity(cityId);
+    setSelectedDistrict("");
+  };
+
+  const handleDistrictChange = (e) => {
+    const districtId = e.target.value;
+    setSelectedDistrict(districtId);
+  };
 
   const handleEdit = (item) => {
     console.log("item...", item);
@@ -279,6 +306,9 @@ export default function HotelListPage() {
   const uniqueArr = Array.from(new Set(provinceList));
   console.log("provinceList", uniqueArr);
 
+  console.log("city..", cities);
+  console.log("selectedCity..", selectedCity);
+
   return (
     <div>
       {show === false ? (
@@ -404,27 +434,51 @@ export default function HotelListPage() {
                   <label>Địa chỉ</label>
                   <Row>
                     <Col lg={4}>
-                      <input
+                      {/* <input
                         ref={houseRef}
                         type="text"
                         className="form-control"
-                        placeholder="Số nhà"
-                      />
+                        placeholder="Tỉnh/ Thành phố"
+                      /> */}
+                      <label>Thành phố:</label>
+                      <sselect value={selectedCity} onChange={handleCityChange}>
+                        <option value="">Chọn thành phố</option>
+                        {cities.map((city) => (
+                          <option key={city.id} value={city.id}>
+                            {city.name}
+                          </option>
+                        ))}
+                      </sselect>
                     </Col>
                     <Col lg={4}>
-                      <input
+                      {/* <input
                         ref={districtRef}
                         type="text"
                         className="form-control"
                         placeholder="Quận/ Huyện"
-                      />
+                      /> */}
+                      <label>Huyện:</label>
+                      <select
+                        value={selectedDistrict}
+                        onChange={handleDistrictChange}
+                        disabled={!selectedCity}
+                      >
+                        <option value="">Chọn quận/huyện</option>
+                        {cities
+                          .find((city) => city?.name === selectedCity)
+                          ?.districts.map((district) => (
+                            <option key={district.code} value={district.code}>
+                              {district?.name}
+                            </option>
+                          ))}
+                      </select>
                     </Col>
                     <Col lg={4}>
                       <input
                         ref={provinceRef}
                         type="text"
                         className="form-control"
-                        placeholder="Tỉnh/ Thành phố"
+                        placeholder="Số nhà"
                       />
                     </Col>
                   </Row>

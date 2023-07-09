@@ -128,7 +128,7 @@ const Widget = ({ type, amount }) => {
         amount: roomStateLength?.length,
         title: "PHÒNG",
         isMoney: false,
-        link: "See all rooms",
+        // link: "See all rooms",
         icon: (
           <Inventory2OutlinedIcon
             className="icon"
@@ -145,7 +145,7 @@ const Widget = ({ type, amount }) => {
         amount: bookingLength?.length,
         title: "ĐƠN ĐẶT",
         isMoney: false,
-        link: "View all orders",
+        // link: "View all orders",
         icon: (
           <ShoppingCartOutlinedIcon
             className="icon"
@@ -162,7 +162,7 @@ const Widget = ({ type, amount }) => {
         amount: sumdoanhthu,
         title: "DOANH THU",
         // isMoney: true,
-        link: "View net earnings",
+        // link: "View net earnings",
         icon: (
           <MonetizationOnOutlinedIcon
             className="icon"
@@ -176,7 +176,7 @@ const Widget = ({ type, amount }) => {
         amount: bookingRoomLength?.length,
         title: "PHÒNG ĐANG ĐẶT",
         // isMoney: true,
-        link: "See details",
+        // link: "See details",
         icon: (
           <AccountBalanceWalletOutlinedIcon
             className="icon"
