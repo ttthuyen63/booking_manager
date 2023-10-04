@@ -4,8 +4,8 @@ import { useLocation } from "react-router-dom";
 import SideBarItem from "./sidebar-item";
 
 import "./styles.css";
-import e2 from "../../assets/images/e2.png";
-import LogoutIcon from "../../assets/icons/logout.svg";
+import e2 from "../../image/e2.png";
+// import LogoutIcon from "../../assets/icons/logout.svg";
 
 function SideBar({ menu }) {
   const location = useLocation();
@@ -43,7 +43,7 @@ function SideBar({ menu }) {
           <div className="sidebar-footer">
             <span className="sidebar-item-label">Logout</span>
             <img
-              src={LogoutIcon}
+              // src={LogoutIcon}
               alt="icon-logout"
               className="sidebar-item-icon"
             />

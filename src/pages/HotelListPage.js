@@ -1,21 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Container, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBoxesPacking,
-  faCaretDown,
-  faCheckCircle,
-  faFileCirclePlus,
-  faHome,
-  faPencilSquare,
-  faPlusCircle,
-  faSave,
-  faStar,
-  faStickyNote,
-  faTimesCircle,
-  faTrash,
-  faUserNurse,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSave, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { customAxios } from "../config/api";
@@ -430,38 +416,38 @@ export default function HotelListPage() {
                     className="form-control"
                   />
                 </Col>
-                <Col lg={12}>
+                {/* <Col lg={12}>
                   <label>Địa chỉ</label>
                   <Row>
                     <Col lg={4}>
-                      {/* <input
+                      <input
                         ref={houseRef}
                         type="text"
                         className="form-control"
                         placeholder="Tỉnh/ Thành phố"
-                      /> */}
+                      />
                       <label>Thành phố:</label>
-                      <sselect value={selectedCity} onChange={handleCityChange}>
-                        <option value="">Chọn thành phố</option>
-                        {cities.map((city) => (
-                          <option key={city.id} value={city.id}>
-                            {city.name}
-                          </option>
-                        ))}
-                      </sselect>
+                      <Select
+                        value={selectedCity}
+                        onChange={handleCityChange}
+                        options={cities?.map((city) => ({
+                          value: city?.id,
+                          label: city?.name,
+                        }))}
+                      ></Select>
                     </Col>
                     <Col lg={4}>
-                      {/* <input
-                        ref={districtRef}
-                        type="text"
-                        className="form-control"
-                        placeholder="Quận/ Huyện"
-                      /> */}
                       <label>Huyện:</label>
-                      <select
+                      <Select
                         value={selectedDistrict}
                         onChange={handleDistrictChange}
                         disabled={!selectedCity}
+                        options={cities
+                          .find((city) => city?.name === selectedCity)
+                          ?.districts.map((district) => ({
+                            value: district?.code,
+                            label: district?.name,
+                          }))}
                       >
                         <option value="">Chọn quận/huyện</option>
                         {cities
@@ -471,7 +457,7 @@ export default function HotelListPage() {
                               {district?.name}
                             </option>
                           ))}
-                      </select>
+                      </Select>
                     </Col>
                     <Col lg={4}>
                       <input
@@ -482,7 +468,7 @@ export default function HotelListPage() {
                       />
                     </Col>
                   </Row>
-                </Col>
+                </Col> */}
                 <Col lg={12}>
                   <label>Mô tả</label>
                   <input

@@ -162,7 +162,7 @@ export default function HomePage() {
               style={{ width: "200px" }}
             /> */}
           </div>
-          <h1 className="mt-4" style={{ textAlign: "center" }}>
+          <h1 className="" style={{ textAlign: "center" }}>
             Thống kê
           </h1>
 
