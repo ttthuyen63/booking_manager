@@ -530,3 +530,7 @@ tbody {
 tr {
   padding: 20px;
 }
+
+.table-new-order th {
+  font-size: smaller;
+}

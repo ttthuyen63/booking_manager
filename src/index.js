@@ -13,7 +13,7 @@ import ProtectRouter from "./components/ProtectRouter";
 import RoomListPage from "./pages/RoomListPage";
 import HotelListPage from "./pages/HotelListPage";
 import OrderPage from "./pages/orderPage";
-import HotelDetail from "./pages/hotelDetail";
+// import HotelDetail from "./pages/hotelDetail";
 
 const router = createBrowserRouter([
   {
@@ -41,14 +41,14 @@ const router = createBrowserRouter([
       </ProtectRouter>
     ),
   },
-  {
-    path: "/hotelList/:code",
-    element: (
-      <ProtectRouter>
-        <HotelDetail />
-      </ProtectRouter>
-    ),
-  },
+  // {
+  //   path: "/hotelList/:code",
+  //   element: (
+  //     <ProtectRouter>
+  //       <HotelDetail />
+  //     </ProtectRouter>
+  //   ),
+  // },
   {
     path: "/order",
     element: (

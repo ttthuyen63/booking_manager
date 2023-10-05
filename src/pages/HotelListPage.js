@@ -13,7 +13,6 @@ import moment from "moment";
 import { currencyFormat } from "../ultils/constant";
 import SideBar from "../components/Sidebar";
 import sidebar_menu from "../constants/sidebar-menu";
-// import { Select } from "@mui/material";
 import Select from "react-select";
 import Star from "../components/Star";
 import {
@@ -607,25 +606,6 @@ export default function HotelListPage() {
                           <td>
                             <Star item={item?.start} />
                           </td>
-                          {/* <td>
-                            <button
-                              onClick={() => goToDetail(item?.id)}
-                              variant="primary"
-                              type="button"
-                              className="btn btn-warning btn-xs"
-                              data-toggle="modal"
-                              data-target="#moreModal"
-                            >
-                              <span
-                                className={{
-                                  dataToggle: Tooltip,
-                                  title: "Xem thêm",
-                                }}
-                              >
-                                <FontAwesomeIcon icon={faStickyNote} /> Xem
-                              </span>
-                            </button>
-                          </td> */}
 
                           <td>
                             <button

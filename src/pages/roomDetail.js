@@ -202,36 +202,9 @@ export default function RoomDetail() {
                           Đơn hàng chờ duyệt
                         </Link>
                       </div>
-                      {/* <div className="dropdown-item">
-                        <Link
-                          className="nav-link"
-                          type="button"
-                          to="/confirmBill"
-                          style={{ color: "white", textDecoration: "none" }}
-                        >
-                          Đơn hàng chờ duyệt
-                        </Link>
-                      </div> */}
                     </div>
                   )}
                 </div>
-
-                {/* <Link
-                className="nav-link"
-                type="button"
-                to="/productList"
-                style={{ color: "white" }}
-              >
-                <FontAwesomeIcon icon={faFileCirclePlus} /> Quản lý sản phẩm
-              </Link>
-              <Link
-                className="nav-link"
-                type="button"
-                to="/bookList"
-                style={{ color: "white" }}
-              >
-                <FontAwesomeIcon icon={faBoxesPacking} /> Quản lý đơn hàng
-              </Link> */}
               </div>
             </div>
           </div>
@@ -257,76 +230,6 @@ export default function RoomDetail() {
                   <h4 class="ml-0 mt-0" style={{ textAlign: "center" }}>
                     Thông tin phòng
                   </h4>
-                  {/* <div class="row">
-                    <div class="col-sm-4 position-left">
-                      <img
-                        variant="bottom"
-                        width={350}
-                        height={350}
-                        src={detail?.image[0]}
-                      />
-                    </div>
-                    <div class="col-sm-8 position-right">
-                      <div
-                        className="form-group"
-                        style={{ display: "flex", justifyContent: "center" }}
-                      >
-                        <Table
-                          striped
-                          bordered
-                          hover
-                          size="sm"
-                          style={{
-                            width: "75%",
-                          }}
-                        >
-                          <tr>
-                            <th style={{ padding: "10px", width: "200px" }}>
-                              Tên sản phẩm:{" "}
-                            </th>
-                            <td>{detail?.name}</td>
-                          </tr>
-                          <tr>
-                            <th style={{ padding: "10px", width: "200px" }}>
-                              Mã sản phẩm:{" "}
-                            </th>
-                            <td>{detail?.categoryCode}</td>
-                          </tr>
-                          <tr>
-                            <th style={{ padding: "10px", width: "200px" }}>
-                              Mô tả sản phẩm:{" "}
-                            </th>
-                            <td>{detail?.description}</td>
-                          </tr>
-                          <tr>
-                            <th style={{ padding: "10px", width: "200px" }}>
-                              Màu sắc:{" "}
-                            </th>
-                            <td>{detail?.color + ""}</td>
-                          </tr>
-                          <tr>
-                            <th style={{ padding: "10px", width: "200px" }}>
-                              Kích cỡ:{" "}
-                            </th>
-                            <td>{detail?.size + ""}</td>
-                          </tr>
-                          <tr>
-                            <th style={{ padding: "10px", width: "200px" }}>
-                              Số lượng sản phẩm:{" "}
-                            </th>
-                            <td>{sumQuantity}</td>
-                          </tr>
-                          <tr>
-                            <th style={{ padding: "10px", width: "200px" }}>
-                              Giá sản phẩm:{" "}
-                            </th>
-                            <td>{currencyFormat(detail?.price)}</td>
-                          </tr>
-                        </Table>
-                      </div>
-                    </div>
-                  </div> */}
-                  {/* ----------------------------------------------------- */}
                   <div class="row">
                     <div class="col-sm-4 position-left">
                       <img

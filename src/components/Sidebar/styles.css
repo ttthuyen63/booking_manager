@@ -1,7 +1,7 @@
 .sidebar {
   top: 0;
   left: 0;
-  width: 320px;
+  width: auto;
   height: 100vh;
   display: flex;
   justify-content: center;

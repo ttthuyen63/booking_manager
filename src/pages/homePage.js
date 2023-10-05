@@ -211,7 +211,7 @@ export default function HomePage() {
           <div className="row">
             <div className="col-1"></div>
             <div className="col-10">
-              <table className="table recently-violated">
+              <table className="table recently-violated table-new-order">
                 <thead>
                   <tr>
                     <th scope="col">Mã đơn hàng</th>

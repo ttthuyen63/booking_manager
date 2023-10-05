@@ -341,58 +341,6 @@ export default function OrderPage() {
                           <td>{item?.start_date}</td>
                           <td>{item?.end_date}</td>
                           <td>{currencyFormat(item?.price)}</td>
-                          {/* <td>
-                            <button
-                              onClick={() => goToDetail(item.code)}
-                              variant="primary"
-                              type="button"
-                              className="btn btn-primary btn-xs"
-                              data-toggle="modal"
-                              data-target="#moreModal"
-                            >
-                              <span
-                                className={{
-                                  dataToggle: Tooltip,
-                                  title: "Xem thêm",
-                                }}
-                              >
-                                <FontAwesomeIcon icon={faStickyNote} />
-                              </span>
-                            </button>
-                            <button
-                              type="button"
-                              className="btn btn-secondary btn-xs"
-                              data-toggle="modal"
-                              data-target="#editModal"
-                              variant="primary"
-                              onClick={() => handleEdit(item)}
-                            >
-                              <span
-                                className={{
-                                  dataToggle: Tooltip,
-                                  title: "Chỉnh sửa",
-                                }}
-                              >
-                                <FontAwesomeIcon icon={faPencilSquare} />
-                              </span>
-                            </button>
-                            <button
-                              onClick={() => handleClickDelete(item?.code)}
-                              type="button"
-                              className="btn btn-danger btn-xs"
-                              data-toggle="modal"
-                              data-target="#delModal"
-                            >
-                              <span
-                                className={{
-                                  dataToggle: Tooltip,
-                                  title: "Xóa",
-                                }}
-                              >
-                                <FontAwesomeIcon icon={faTrash} />
-                              </span>
-                            </button>
-                          </td> */}
 
                           <td>
                             <button

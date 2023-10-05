@@ -56,9 +56,7 @@ export default function RoomListPage() {
   const [deleteCode, setdeleteCode] = useState("");
   const [filterroom, setfilterroom] = useState();
   const [showDel, setshowDel] = useState(false);
-  const [isActiveroom, setisActiveroom] = useState(false);
-  const [isActiveOrder, setisActiveOrder] = useState(false);
-  const [imageroomData1, setImageroomData1] = useState();
+
   const [detail, setDetail] = useState([]);
   const [showDetail, setShowDetail] = useState(false);
   const [modal, setmodal] = useState(false);
@@ -74,7 +72,7 @@ export default function RoomListPage() {
   const [files, setFile] = useState();
   const [phanloai, setphanloai] = useState();
   const [phanloaiData, setphanloaiData] = useState();
-  
+
   console.log("roomState...", roomState);
   const roomList = useSelector((state) => state.roomReducer);
 
@@ -429,44 +427,7 @@ export default function RoomListPage() {
         </div>
       )}
 
-      <div>
-        {/* {detail?.map((item, index) => (
-          <Modal
-            size="lg"
-            isOpen={showDetail}
-            toggle={() => setShowDetail(!showDetail)}
-          >
-            <ModalHeader
-              toggle={() => setShowDetail(!showDetail)}
-            ></ModalHeader>
-            <ModalBody>
-              <form>
-                <Row>
-                  <Col lg={6}>
-                    <div className="slide-container">
-                      <Slide>
-                        {slideImages[0]?.map((slideImage, index) => (
-                          <div key={index}>
-                            <div
-                              style={{
-                                ...divStyle,
-                                backgroundImage: `${slideImage}`,
-                              }}
-                            ></div>
-                          </div>
-                        ))}
-                      </Slide>
-                    </div>
-                  </Col>
-                  <Col lg={6}>
-                    <h2>{item?.name}</h2>
-                  </Col>
-                </Row>
-              </form>
-            </ModalBody>
-          </Modal>
-        ))} */}
-      </div>
+      <div></div>
       <div>
         <Modal size="lg" isOpen={modal} toggle={() => setmodal(!modal)}>
           <ModalHeader toggle={() => setmodal(!modal)}>THÊM PHÒNG</ModalHeader>
