@@ -7,8 +7,8 @@ const StatusBill = (props) => {
     return (
       <div
         style={{
-          // color: "white",
-          // backgroundColor: "#015c92",
+          color: "black",
+          backgroundColor: "yellow",
           border: "1px solid #ccc",
           textAlign: "center",
           padding: "5px 0px",
@@ -22,8 +22,8 @@ const StatusBill = (props) => {
     return (
       <div
         style={{
-          // color: "white",
-          // backgroundColor: "green",
+          color: "white",
+          backgroundColor: "green",
           border: "1px solid #ccc",
           textAlign: "center",
           padding: "5px 0px",
@@ -35,13 +35,31 @@ const StatusBill = (props) => {
     );
   } else if (item == 2) {
     return (
-      <div style={{ color: "#fff  !important", background: "blue !important" }}>
+      <div
+        style={{
+          color: "white",
+          backgroundColor: "#015c92",
+          border: "1px solid #ccc",
+          textAlign: "center",
+          padding: "5px 0px",
+          borderRadius: "10px",
+        }}
+      >
         {item == 2 ? "Đang giao" : ""}
       </div>
     );
   } else if (item == 3) {
     return (
-      <div style={{ color: "#fff  !important", background: "blue !important" }}>
+      <div
+        style={{
+          color: "white",
+          backgroundColor: "green",
+          border: "1px solid #ccc",
+          textAlign: "center",
+          padding: "5px 0px",
+          borderRadius: "10px",
+        }}
+      >
         {item == 3 ? "Đã nhận hàng" : ""}
       </div>
     );
@@ -49,8 +67,8 @@ const StatusBill = (props) => {
     return (
       <div
         style={{
-          // color: "white",
-          // backgroundColor: "red",
+          color: "white",
+          backgroundColor: "red",
           border: "1px solid #ccc",
           textAlign: "center",
           padding: "5px 0px",

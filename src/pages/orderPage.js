@@ -68,7 +68,7 @@ export default function OrderPage() {
     try {
       const formData = new FormData();
       formData.append("MAHD", `${id}`);
-      formData.append("STATUS", "1");
+      formData.append("STATUS", "2");
 
       const response = await customAxios.post(
         "/Product/GetBill/updateStatusBill.php",
@@ -235,7 +235,7 @@ export default function OrderPage() {
               <ModalBody>
                 <form>
                   <Row>
-                    <Col lg={6} >
+                    <Col lg={6}>
                       <Row className="form-group">
                         Mã khách hàng: {orderDetail[0]?.MAKH}
                       </Row>
@@ -367,25 +367,25 @@ export default function OrderPage() {
                     <tbody id="myTable">
                       {orderState?.map((item, index) => (
                         <tr>
-                          <td onClick={() => handleDetail(item?.MAKH)}>
-                            HĐ{item?.MAHD}
-                          </td>
+                          <td>HĐ{item?.MAHD}</td>
                           <td>{item?.MAKH}</td>
                           <td>{item?.TENKH}</td>
                           <td>{item?.NGAYLAP_HD}</td>
                           <td>{item?.PHONE}</td>
-                          <td>{currencyFormat(item?.TONGTIEN)}</td>
+                          <td>{item?.TONGTIEN}</td>
+                          {/* <td>{item?.start_date}</td> */}
+                          {/* <td>{item?.STATUS}</td> */}
                           <td>
                             <StatusBill item={item?.STATUS} />
                           </td>
                           <td>
-                            {item?.STATUS == "0" ? (
+                            {item?.STATUS == "0" || item?.STATUS == 2 ? (
                               <button
                                 type="button"
-                                className="btn btn-success btn-xs"
+                                className="btn btn-xs"
                                 data-toggle="modal"
                                 // data-target="#delModal"
-                                onClick={() => handleConfirmBill(item?.MAHD)}
+                                // onClick={() => handleClickDelete(item?.id)}
                               >
                                 <span
                                   className={{
@@ -399,11 +399,11 @@ export default function OrderPage() {
                             ) : (
                               <button
                                 type="button"
-                                className="btn btn-success btn-xs"
+                                className="btn btn-xs"
                                 data-toggle="modal"
                                 disabled
                                 // data-target="#delModal"
-                                onClick={() => handleRefuseBill(item?.MAHD)}
+                                // onClick={() => handleClickDelete(item?.id)}
                               >
                                 <span
                                   className={{
@@ -417,12 +417,52 @@ export default function OrderPage() {
                             )}
                           </td>
                           <td>
+                            {item?.STATUS == 2 ? (
+                              <button
+                                type="button"
+                                className="btn btn-xs"
+                                // data-toggle="modal"
+                                disabled
+                                // data-target="#delModal"
+                                // onClick={() => handleClickDelete(item?.id)}
+                              >
+                                <span
+                                  className={{
+                                    dataToggle: Tooltip,
+                                    title: "Xóa",
+                                  }}
+                                >
+                                  <FontAwesomeIcon icon={faTrash} /> Hủy
+                                </span>
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                className="btn btn-xs"
+                                // data-toggle="modal"
+                                disabled
+                                // data-target="#delModal"
+                                // onClick={() => handleClickDelete(item?.id)}
+                              >
+                                <span
+                                  className={{
+                                    dataToggle: Tooltip,
+                                    title: "Xóa",
+                                  }}
+                                >
+                                  <FontAwesomeIcon icon={faTrash} /> Hủy
+                                </span>
+                              </button>
+                            )}
+                          </td>
+
+                          {/* <td>
                             <button
                               type="button"
-                              className="btn btn-danger btn-xs"
+                              className="btn btn-xs"
                               data-toggle="modal"
                               data-target="#delModal"
-                              onClick={() => handleRefuseBill(item?.MAHD)}
+                              onClick={() => handleClickDelete(item?.id)}
                             >
                               <span
                                 className={{
@@ -433,7 +473,7 @@ export default function OrderPage() {
                                 <FontAwesomeIcon icon={faTrash} /> Hủy
                               </span>
                             </button>
-                          </td>
+                          </td> */}
                         </tr>
                       ))}
                       <div></div>
@@ -457,10 +497,10 @@ export default function OrderPage() {
                             <StatusBill item={item?.STATUS} />
                           </td>
                           <td>
-                            {item?.STATUS == "0" ? (
+                            {item?.STATUS == "0" || item?.STATUS == 2 ? (
                               <button
                                 type="button"
-                                className="btn btn-success btn-xs"
+                                className="btn btn-xs"
                                 data-toggle="modal"
                                 // data-target="#delModal"
                                 // onClick={() => handleClickDelete(item?.id)}
@@ -495,9 +535,49 @@ export default function OrderPage() {
                             )}
                           </td>
                           <td>
+                            {item?.STATUS == 2 ? (
+                              <button
+                                type="button"
+                                className="btn btn-xs"
+                                // data-toggle="modal"
+                                disabled
+                                // data-target="#delModal"
+                                // onClick={() => handleClickDelete(item?.id)}
+                              >
+                                <span
+                                  className={{
+                                    dataToggle: Tooltip,
+                                    title: "Xóa",
+                                  }}
+                                >
+                                  <FontAwesomeIcon icon={faTrash} /> Hủy
+                                </span>
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                className="btn btn-xs"
+                                // data-toggle="modal"
+                                disabled
+                                // data-target="#delModal"
+                                // onClick={() => handleClickDelete(item?.id)}
+                              >
+                                <span
+                                  className={{
+                                    dataToggle: Tooltip,
+                                    title: "Xóa",
+                                  }}
+                                >
+                                  <FontAwesomeIcon icon={faTrash} /> Hủy
+                                </span>
+                              </button>
+                            )}
+                          </td>
+
+                          {/* <td>
                             <button
                               type="button"
-                              className="btn btn-danger btn-xs"
+                              className="btn btn-xs"
                               data-toggle="modal"
                               data-target="#delModal"
                               onClick={() => handleClickDelete(item?.id)}
@@ -511,7 +591,7 @@ export default function OrderPage() {
                                 <FontAwesomeIcon icon={faTrash} /> Hủy
                               </span>
                             </button>
-                          </td>
+                          </td> */}
                         </tr>
                       ))}
                     </tbody>
