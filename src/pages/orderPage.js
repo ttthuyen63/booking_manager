@@ -497,7 +497,7 @@ export default function OrderPage() {
                             <StatusBill item={item?.STATUS} />
                           </td>
                           <td>
-                            {item?.STATUS == "0" || item?.STATUS == 2 ? (
+                            {item?.STATUS == 0 ? (
                               <button
                                 type="button"
                                 className="btn btn-xs"
