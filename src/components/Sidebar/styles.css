@@ -13,8 +13,9 @@
   align-items: center;
 }
 .sidebar-logo-container img {
-  width: 80%;
-  padding: 2em;
+  width: 100%;
+  padding: 1em 4em;
+  text-align: center;
 }
 .sidebar-container {
   flex: 1;

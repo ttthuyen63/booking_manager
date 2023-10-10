@@ -4,8 +4,7 @@ import { useLocation } from "react-router-dom";
 import SideBarItem from "./sidebar-item";
 
 import "./styles.css";
-import e2 from "../../image/e2.png";
-// import LogoutIcon from "../../assets/icons/logout.svg";
+import logo_sport from "../../image/logoSport.png";
 
 function SideBar({ menu }) {
   const location = useLocation();
@@ -28,7 +27,7 @@ function SideBar({ menu }) {
     <nav className="sidebar">
       <div className="sidebar-container">
         <div className="sidebar-logo-container">
-          <img src={e2} alt="logo" className="img-logo" />
+          <img src={logo_sport} alt="logo" className="img-logo" />
         </div>
 
         <div className="sidebar-container">
@@ -40,14 +39,14 @@ function SideBar({ menu }) {
             ))}
           </div>
 
-          <div className="sidebar-footer">
+          {/* <div className="sidebar-footer">
             <span className="sidebar-item-label">Logout</span>
             <img
               // src={LogoutIcon}
               alt="icon-logout"
               className="sidebar-item-icon"
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </nav>

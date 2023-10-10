@@ -4,7 +4,7 @@ import HomePage from "./pages/homePage";
 import LoginPage from "./pages/loginPage";
 import { Container } from "react-bootstrap";
 import "boxicons/css/boxicons.min.css";
-import RoomListPage from "./pages/RoomListPage";
+import RoomListPage from "./pages/UserListPage";
 
 function App() {
   return (

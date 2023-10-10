@@ -28,39 +28,6 @@ const Widget = ({ type, amount }) => {
     }
   };
 
-  console.log("room...", roomStateLength);
-  // const filterData = (productState) => {
-  //   productState?.forEach((currentValue, index, arr) => {
-  //     let code = currentValue.code;
-
-  //     let objIndex = arr.findIndex((item) => {
-  //       return item.code == code;
-  //     });
-  //     if (index == objIndex) {
-  //       currentValue.color = [currentValue.color];
-  //       currentValue.size = [currentValue.size];
-  //       currentValue.quantity = [currentValue.quantity];
-  //     } else {
-  //       if (!arr[objIndex].color.includes(currentValue.color)) {
-  //         arr[objIndex].color = [...arr[objIndex].color, currentValue.color];
-  //       }
-  //       if (!arr[objIndex].size.includes(currentValue.size)) {
-  //         arr[objIndex].size = [...arr[objIndex].size, currentValue.size];
-  //       }
-
-  //       if (!arr[objIndex].quantity.includes(currentValue.quantity)) {
-  //         arr[objIndex].quantity = [
-  //           ...arr[objIndex].quantity,
-  //           currentValue.quantity,
-  //         ];
-  //       }
-  //       currentValue.code = null;
-  //     }
-  //   });
-  //   return productState?.filter((e) => e.code !== null);
-  // };
-  // const amountProducts = filterData(productState)?.length;
-
   useEffect(() => {
     getbookingApi();
   }, []);
@@ -126,7 +93,7 @@ const Widget = ({ type, amount }) => {
     case "product":
       data = {
         amount: roomStateLength?.length,
-        title: "PHÒNG",
+        title: "SẢN PHẨM",
         isMoney: false,
         // link: "See all rooms",
         icon: (
@@ -174,7 +141,7 @@ const Widget = ({ type, amount }) => {
     case "balance":
       data = {
         amount: bookingRoomLength?.length,
-        title: "PHÒNG ĐANG ĐẶT",
+        title: "NGƯỜI DÙNG",
         // isMoney: true,
         // link: "See details",
         icon: (

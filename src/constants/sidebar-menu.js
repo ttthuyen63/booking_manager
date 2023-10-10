@@ -1,25 +1,21 @@
 const sidebar_menu = [
   {
     id: 1,
-    // icon: DashboardIcon,
     path: "/",
     title: "Trang chủ",
   },
   {
     id: 2,
-    // icon: DashboardIcon,
-    path: "/hotelList" || "/hotelList/:code",
-    title: "Quản lý khách sạn",
+    path: "/productList" || "/productList/:code",
+    title: "Quản lý sản phẩm",
   },
   {
     id: 3,
-    // icon: <i className="bx bx-bed"></i>,
-    path: "/roomList",
-    title: "Quản lý phòng",
+    path: "/userList",
+    title: "Quản lý người dùng",
   },
   {
     id: 4,
-    // icon: <i className="bx bx-file"></i>,
     path: "/order",
     title: "Quản lý đơn đặt",
   },

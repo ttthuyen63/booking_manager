@@ -492,7 +492,7 @@ i {
 }
 
 th {
-  text-align: left;
+  text-align: center;
   padding: 12px 24px;
   background: transparent;
   box-shadow: none;
@@ -504,27 +504,14 @@ th {
   border-bottom: 0.05rem solid rgb(240, 242, 245);
 }
 
-table {
+table .recently-violated {
   width: 100%;
   margin: auto;
+  border-collapse: collapse;
 }
 
 tbody {
   display: table-row-group;
-}
-
-.RoomAvailable {
-  text-align: center;
-  color: white;
-  background-color: rgb(33, 110, 58);
-  border-radius: 10px;
-}
-
-.RoomUnAvailable {
-  border-radius: 10px;
-  text-align: center;
-  color: white;
-  background-color: rgb(47, 47, 133);
 }
 
 tr {
@@ -532,5 +519,19 @@ tr {
 }
 
 .table-new-order th {
-  font-size: smaller;
+  /* font-size: smaller; */
 }
+
+/* css status bill */
+/* CSS trong file CSS của bạn hoặc tương tự */
+.green-bg {
+  background-color: green;
+  color: white;
+}
+
+.blue-bg {
+  background-color: blue;
+  color: white;
+}
+
+/* Thêm các lớp CSS khác cho các trạng thái khác nếu cần */

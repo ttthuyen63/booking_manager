@@ -7,40 +7,36 @@ const initialState = {
   data: {},
 };
 
-export const addroom = createAsyncThunk("/addroom", async (arg, thunkApi) => {
+export const adduser = createAsyncThunk("/adduser", async (arg, thunkApi) => {
   const token = thunkApi.getState().userReducer.token;
   // const res = await customAxios.post(`/orderList.json?auth=${token}`, {
-  const res = await customAxios.post(`/room`, {
-    idRoom: arg.idRoom,
-    description: arg.description,
-    listURL: arg.listURL,
-    hotelID: arg.hotelID,
-    roomNumber: arg.roomNumber,
-    roomName: arg.roomName,
-    numberBed: arg.numberBed,
-    maxQuantity: arg.maxQuantity,
-    price: arg.price,
-    status: arg.status,
+  const res = await customAxios.post(`/user`, {
+    MAKH: arg.MAKH,
+    TENKH: arg.TENKH,
+    DIENTHOAI: arg.DIENTHOAI,
+    DIACHI: arg.DIACHI,
+    EMAIL: arg.EMAIL,
+    PASSWORD: arg.PASSWORD,
   });
   return res.data;
 });
 
-export const getListroom = createAsyncThunk(
-  // "roomList/getList",
-  "/room",
+export const getListuser = createAsyncThunk(
+  // "userList/getList",
+  "/user",
   async (arg, thunkApi) => {
     const token = thunkApi.getState().userReducer.token;
-    // const res = await customAxios.get(`/roomList.json?auth=${token}`);
-    const res = await customAxios.get(`/room.json?auth=${token}`);
+    // const res = await customAxios.get(`/userList.json?auth=${token}`);
+    const res = await customAxios.get(`/user.json?auth=${token}`);
     return res.data;
   }
 );
 
-const roomSlice = createSlice({
-  name: "room",
+const userSlice = createSlice({
+  name: "user",
   initialState,
   reducers: {
-    addListroom: (state, action) => {
+    addListuser: (state, action) => {
       // const orders = action.payload;
       // return { ...orders };
     },
@@ -49,35 +45,35 @@ const roomSlice = createSlice({
     builder
 
       //getList
-      .addCase(getListroom.pending, (state, action) => {
+      .addCase(getListuser.pending, (state, action) => {
         state.loading = true;
         state.error = false;
       })
-      .addCase(getListroom.fulfilled, (state, action) => {
-        const rooms = action.payload;
+      .addCase(getListuser.fulfilled, (state, action) => {
+        const users = action.payload;
         state.loading = false;
-        state.data = rooms;
+        state.data = users;
       })
-      .addCase(getListroom.rejected, (state, action) => {
+      .addCase(getListuser.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
       })
 
-      //add room
-      .addCase(addroom.pending, (state, action) => {
+      //add user
+      .addCase(adduser.pending, (state, action) => {
         state.loading = true;
         state.error = false;
       })
-      .addCase(addroom.fulfilled, (state, action) => {
+      .addCase(adduser.fulfilled, (state, action) => {
         state.loading = false;
       })
-      .addCase(addroom.rejected, (state, action) => {
+      .addCase(adduser.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
       });
   },
 });
 
-export const { addListroom } = roomSlice.actions;
-export const selectListroom = (state) => state.roomReducer;
-export default roomSlice.reducer;
+export const { addListuser } = userSlice.actions;
+export const selectListuser = (state) => state.userReducer;
+export default userSlice.reducer;

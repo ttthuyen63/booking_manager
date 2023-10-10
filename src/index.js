@@ -10,9 +10,10 @@ import { Provider } from "react-redux";
 import "bootstrap/dist/css/bootstrap.css";
 import store from "./redux/store";
 import ProtectRouter from "./components/ProtectRouter";
-import RoomListPage from "./pages/RoomListPage";
-import HotelListPage from "./pages/HotelListPage";
+import RoomListPage from "./pages/UserListPage";
+import ProductListPage from "./pages/ProductListPage";
 import OrderPage from "./pages/orderPage";
+import UserListPage from "./pages/UserListPage";
 // import HotelDetail from "./pages/hotelDetail";
 
 const router = createBrowserRouter([
@@ -26,18 +27,18 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/roomList",
+    path: "/userList",
     element: (
       <ProtectRouter>
-        <RoomListPage />
+        <UserListPage />
       </ProtectRouter>
     ),
   },
   {
-    path: "/hotelList",
+    path: "/productList",
     element: (
       <ProtectRouter>
-        <HotelListPage />
+        <ProductListPage />
       </ProtectRouter>
     ),
   },

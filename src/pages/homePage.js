@@ -39,6 +39,7 @@ import sidebar_menu from "../constants/sidebar-menu";
 import Chart from "react-apexcharts";
 import { currencyFormat } from "../ultils/constant";
 import { DataGrid } from "@mui/x-data-grid";
+import StatusBill from "../components/StatusBill";
 
 export default function HomePage() {
   // const [first, setfirst] = useState(second);
@@ -71,10 +72,11 @@ export default function HomePage() {
   }, []);
   const getorderApi = async () => {
     try {
-      const res = await customAxios.get("/booking/list");
-      setorderState(res?.data);
+      const response = await customAxios.get("/Product/GetBill/getAllBill.php");
+      setorderState(response?.data?.result);
+      console.log("orderState", orderState);
     } catch (error) {
-      console.log("Lỗi", error);
+      console.error(error);
     }
   };
 
@@ -135,11 +137,11 @@ export default function HomePage() {
   console.log("lastest...", latestOrders);
   return (
     <div className="row">
-      <div className="col-sm-3" style={{ padding: 0 }}>
+      <div className="col-sm-2" style={{ padding: 0 }}>
         <SideBar menu={sidebar_menu} />
       </div>
 
-      <div className="col-sm-9" style={{ padding: 0 }}>
+      <div className="col-sm-10" style={{ padding: 0 }}>
         <div className="content">
           <div className="content-header">
             <h5 className="content-account">
@@ -168,7 +170,10 @@ export default function HomePage() {
 
           <div className="row statisc">
             <div className="col-1"></div>
-            <div className="col-6 widgets" style={{ justifyContent: "center" }}>
+            <div
+              className="col-10 widgets"
+              style={{ justifyContent: "center" }}
+            >
               <div className="left">
                 <Widget type="product" />
                 <Widget type="earning" />
@@ -179,33 +184,6 @@ export default function HomePage() {
               </div>
             </div>
             <div className="col-1"></div>
-            <div className="col-3">
-              <h3>Doanh thu</h3>
-              <table className="table recently-violated">
-                <thead>
-                  <tr>
-                    <th scope="col">Tháng</th>
-                    <th scope="col">Doanh thu</th>
-                  </tr>
-                </thead>
-                <tbody id="myTable">
-                  <td>
-                    <tr>Tháng 2</tr>
-                    <tr>Tháng 3</tr>
-                    <tr>Tháng 4</tr>
-                    <tr>Tháng 5</tr>
-                    <tr>Tháng 6</tr>
-                    <tr>Tháng 7</tr>
-                  </td>
-                  <td>
-                    {moneyState?.map((item, index) => (
-                      <tr>{currencyFormat(item?.money)}</tr>
-                    ))}
-                  </td>
-                  <div></div>
-                </tbody>
-              </table>
-            </div>
           </div>
           <h2 style={{ textAlign: "center" }}>Danh sách các đơn mới nhất</h2>
           <div className="row">
@@ -214,30 +192,33 @@ export default function HomePage() {
               <table className="table recently-violated table-new-order">
                 <thead>
                   <tr>
-                    <th scope="col">Mã đơn hàng</th>
-                    <th scope="col">Mã khách sạn</th>
-                    <th scope="col">Tên phòng</th>
-                    <th scope="col">Số phòng</th>
-                    <th scope="col">Họ tên KH</th>
+                    <th scope="col">Mã hóa đơn</th>
+                    <th scope="col">Mã khách hàng</th>
+                    <th scope="col">Tên khách hàng</th>
+                    {/* <th scope="col">Số phòng</th> */}
+                    <th scope="col">Ngày đặt</th>
                     <th scope="col">SĐT</th>
-                    <th scope="col">Ngày đến</th>
-                    <th scope="col">Ngày đi</th>
                     <th scope="col">Tổng giá</th>
+                    <th scope="col">Trạng thái</th>
                   </tr>
                 </thead>
                 {/* ----------------------------------------- */}
                 <tbody id="myTable">
                   {latestOrders?.map((item, index) => (
                     <tr>
-                      <td>HĐ{item?.id}</td>
-                      <td>{item?.hotel_id}</td>
-                      <td>{item?.room_name}</td>
-                      <td>{item?.room_number}</td>
-                      <td>{item?.customer_name}</td>
-                      <td>{item?.customer_phone}</td>
-                      <td>{item?.start_date}</td>
-                      <td>{item?.end_date}</td>
-                      <td>{currencyFormat(item?.price)}</td>
+                      <td
+                      // onClick={() => handleDetail(item?.MAKH)}
+                      >
+                        HĐ{item?.MAHD}
+                      </td>
+                      <td>{item?.MAKH}</td>
+                      <td>{item?.TENKH}</td>
+                      <td>{item?.NGAYLAP_HD}</td>
+                      <td>{item?.PHONE}</td>
+                      <td>{currencyFormat(item?.TONGTIEN)}</td>
+                      <td>
+                        <StatusBill item={item?.STATUS} />
+                      </td>
                     </tr>
                   ))}
                   <div></div>
