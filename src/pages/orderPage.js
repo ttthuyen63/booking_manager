@@ -30,7 +30,8 @@ export default function OrderPage() {
   const [showDel, setshowDel] = useState(false);
   const [isActiveOrder, setisActiveOrder] = useState(false);
   const [modelDetail, setmodelDetail] = useState(false);
-  const [isLoadingDetail, setIsLoadingDetail] = useState(true);
+  const [isLoading, setisLoading] = useState(true);
+  const [isLoadingDetail, setIsLoadingDetail] = useState(false);
 
   console.log("orderState...", orderState);
   const orderList = useSelector((state) => state.orderReducer);
@@ -51,18 +52,29 @@ export default function OrderPage() {
   };
   const handleDetail = async (id) => {
     try {
+      setIsLoadingDetail(true);
       const response = await customAxios.get(
         `/Product/GetBill/getBillById.php?userId=${id}`
       );
       setorderDetail(response?.data?.result);
       setmodelDetail(true);
-      console.log("orderDetail[0]?.ListProduct", orderDetail[0]?.ListProduct);
+      setIsLoadingDetail(false);
+      console.log("orderDetail[0]", orderDetail[0]);
     } catch (error) {
       console.error(error);
-    } finally {
       setIsLoadingDetail(false);
+    } finally {
+      setisLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (orderDetail && !isLoadingDetail) {
+      // Do something with editProductData here
+      console.log("editProductData updated", orderDetail);
+      // Khai báo các xử lý cần thực hiện sau khi cập nhật editProductData ở đây
+    }
+  }, [orderDetail, isLoadingDetail]);
 
   const handleConfirmBill = async (id) => {
     try {
@@ -225,7 +237,7 @@ export default function OrderPage() {
           isOpen={modelDetail}
           toggle={() => setmodelDetail(!modelDetail)}
         >
-          {isLoadingDetail ? (
+          {isLoading ? (
             <p>Loading...</p>
           ) : (
             <>
@@ -257,7 +269,7 @@ export default function OrderPage() {
                         Ghi chú: {orderDetail[0]?.NOTE}
                       </Row>
                       <Row className="form-group">
-                        Tổng tiền: {orderDetail[0]?.TONGTIEN}
+                        Tổng tiền: {currencyFormat(orderDetail[0]?.TONGTIEN)}
                       </Row>
                     </Col>
                     <Col lg={12}>
@@ -368,11 +380,13 @@ export default function OrderPage() {
                       {orderState?.map((item, index) => (
                         <tr>
                           <td>HĐ{item?.MAHD}</td>
-                          <td>{item?.MAKH}</td>
+                          <td onClick={() => handleDetail(item?.MAKH)}>
+                            {item?.MAKH}
+                          </td>
                           <td>{item?.TENKH}</td>
                           <td>{item?.NGAYLAP_HD}</td>
                           <td>{item?.PHONE}</td>
-                          <td>{item?.TONGTIEN}</td>
+                          <td>{currencyFormat(item?.TONGTIEN)}</td>
                           {/* <td>{item?.start_date}</td> */}
                           {/* <td>{item?.STATUS}</td> */}
                           <td>
@@ -385,7 +399,7 @@ export default function OrderPage() {
                                 className="btn btn-xs"
                                 data-toggle="modal"
                                 // data-target="#delModal"
-                                // onClick={() => handleClickDelete(item?.id)}
+                                onClick={() => handleConfirmBill(item?.MAHD)}
                               >
                                 <span
                                   className={{
@@ -403,7 +417,7 @@ export default function OrderPage() {
                                 data-toggle="modal"
                                 disabled
                                 // data-target="#delModal"
-                                // onClick={() => handleClickDelete(item?.id)}
+                                onClick={() => handleConfirmBill(item?.MAHD)}
                               >
                                 <span
                                   className={{
@@ -424,7 +438,7 @@ export default function OrderPage() {
                                 // data-toggle="modal"
                                 disabled
                                 // data-target="#delModal"
-                                // onClick={() => handleClickDelete(item?.id)}
+                                onClick={() => handleRefuseBill(item?.MAHD)}
                               >
                                 <span
                                   className={{
@@ -442,7 +456,7 @@ export default function OrderPage() {
                                 // data-toggle="modal"
                                 disabled
                                 // data-target="#delModal"
-                                // onClick={() => handleClickDelete(item?.id)}
+                                onClick={() => handleRefuseBill(item?.MAHD)}
                               >
                                 <span
                                   className={{
@@ -485,25 +499,27 @@ export default function OrderPage() {
                     <tbody id="myTable">
                       {sortedOrders?.map((item, index) => (
                         <tr>
-                          <td>HĐ{item?.MAHD}</td>
+                          <td onClick={() => handleDetail(item?.MAHD)}>
+                            HĐ{item?.MAHD}
+                          </td>
                           <td>{item?.MAKH}</td>
                           <td>{item?.TENKH}</td>
                           <td>{item?.NGAYLAP_HD}</td>
                           <td>{item?.PHONE}</td>
-                          <td>{item?.TONGTIEN}</td>
+                          <td>{currencyFormat(item?.TONGTIEN)}</td>
                           {/* <td>{item?.start_date}</td> */}
                           {/* <td>{item?.STATUS}</td> */}
                           <td>
                             <StatusBill item={item?.STATUS} />
                           </td>
                           <td>
-                            {item?.STATUS == 0 ? (
+                            {item?.STATUS == "0" || item?.STATUS == 2 ? (
                               <button
                                 type="button"
                                 className="btn btn-xs"
                                 data-toggle="modal"
                                 // data-target="#delModal"
-                                // onClick={() => handleClickDelete(item?.id)}
+                                onClick={() => handleConfirmBill(item?.MAHD)}
                               >
                                 <span
                                   className={{
@@ -517,11 +533,11 @@ export default function OrderPage() {
                             ) : (
                               <button
                                 type="button"
-                                className="btn btn-success btn-xs"
+                                className="btn btn-xs"
                                 data-toggle="modal"
                                 disabled
                                 // data-target="#delModal"
-                                // onClick={() => handleClickDelete(item?.id)}
+                                onClick={() => handleConfirmBill(item?.MAHD)}
                               >
                                 <span
                                   className={{
@@ -542,7 +558,7 @@ export default function OrderPage() {
                                 // data-toggle="modal"
                                 disabled
                                 // data-target="#delModal"
-                                // onClick={() => handleClickDelete(item?.id)}
+                                onClick={() => handleRefuseBill(item?.MAHD)}
                               >
                                 <span
                                   className={{
@@ -560,7 +576,7 @@ export default function OrderPage() {
                                 // data-toggle="modal"
                                 disabled
                                 // data-target="#delModal"
-                                // onClick={() => handleClickDelete(item?.id)}
+                                onClick={() => handleRefuseBill(item?.MAHD)}
                               >
                                 <span
                                   className={{

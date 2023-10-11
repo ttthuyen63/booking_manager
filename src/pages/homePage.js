@@ -2,35 +2,12 @@ import React from "react";
 import { Button, Container } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faHome,
-  faAddressBook,
-  faBook,
-  faBookBookmark,
-  faTimesCircle,
-  faArrowAltCircleRight,
-  faCartShopping,
-  faHandHolding,
-  faBoxesPacking,
-  faBoxTissue,
-  faBoxArchive,
-  faBoxes,
-  faCircleNotch,
-  faDollyBox,
-  faHandHoldingDroplet,
-  faHandHoldingUsd,
-  faHandsHoldingCircle,
-  faFileCirclePlus,
-  faCaretDown,
-} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { customAxios } from "../config/api";
-import { addListBook } from "../redux/orderSlice";
 import { useState } from "react";
-import { addListproduct } from "../redux/roomSlice";
 import { logout } from "../redux/userSlice";
 import Widget from "../components/Widget";
 // import Chart from "../components/Chart";
@@ -38,7 +15,6 @@ import SideBar from "../components/Sidebar";
 import sidebar_menu from "../constants/sidebar-menu";
 import Chart from "react-apexcharts";
 import { currencyFormat } from "../ultils/constant";
-import { DataGrid } from "@mui/x-data-grid";
 import StatusBill from "../components/StatusBill";
 
 export default function HomePage() {
@@ -51,21 +27,6 @@ export default function HomePage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [orderState, setorderState] = useState(null);
-
-  useEffect(() => {
-    getmoneyApi();
-  }, []);
-  const getmoneyApi = async () => {
-    try {
-      const res = await customAxios.get("/booking/month");
-      // dispatch(addListBook(res.data));
-      setmoneyState(res?.data);
-    } catch (error) {
-      console.log("Lỗi");
-    }
-  };
-
-  console.log("money...", moneyState);
 
   useEffect(() => {
     getorderApi();
