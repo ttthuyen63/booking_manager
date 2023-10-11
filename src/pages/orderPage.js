@@ -54,7 +54,7 @@ export default function OrderPage() {
     try {
       setIsLoadingDetail(true);
       const response = await customAxios.get(
-        `/Product/GetBill/getBillById.php?userId=${id}`
+        `/Product/GetBill/getBillByMahd.php?mahd=${id}`
       );
       setorderDetail(response?.data?.result);
       setmodelDetail(true);
@@ -379,10 +379,10 @@ export default function OrderPage() {
                     <tbody id="myTable">
                       {orderState?.map((item, index) => (
                         <tr>
-                          <td>HĐ{item?.MAHD}</td>
-                          <td onClick={() => handleDetail(item?.MAKH)}>
-                            {item?.MAKH}
+                          <td onClick={() => handleDetail(item?.MAHD)}>
+                            HĐ{item?.MAHD}
                           </td>
+                          <td>{item?.MAKH}</td>
                           <td>{item?.TENKH}</td>
                           <td>{item?.NGAYLAP_HD}</td>
                           <td>{item?.PHONE}</td>
