@@ -16,6 +16,7 @@ import sidebar_menu from "../constants/sidebar-menu";
 import Chart from "react-apexcharts";
 import { currencyFormat } from "../ultils/constant";
 import StatusBill from "../components/StatusBill";
+import { format } from "date-fns";
 
 export default function HomePage() {
   // const [first, setfirst] = useState(second);
@@ -35,67 +36,12 @@ export default function HomePage() {
     try {
       const response = await customAxios.get("/Product/GetBill/getAllBill.php");
       setorderState(response?.data?.result);
-      console.log("orderState", orderState);
     } catch (error) {
       console.error(error);
     }
   };
 
-  // const getproductApi = async () => {
-  //   try {
-  //     const res = await customAxios.get("/lbm/v1/users/get-all");
-  //     dispatch(addListproduct(res.data));
-  //     setproductStateLength(res?.data);
-  //   } catch (error) {
-  //     console.log("Lỗi");
-  //   }
-  // };
-
-  const doanhthu = moneyState?.map((item) => {
-    return item?.money;
-  });
-  console.log("doanhthu", doanhthu);
-  const calculateSum = () => {
-    let sum = 0;
-    doanhthu?.forEach((number) => {
-      sum += number;
-    });
-    return sum;
-  };
-  console.log("Tổng", calculateSum(doanhthu));
-
-  const [state, setState] = useState({
-    options: {
-      colors: ["#E91E63", "#FF9800"],
-      chart: {
-        id: "basic-bar",
-      },
-      xaxis: {
-        categories: [
-          "Tháng 2",
-          "Tháng 3",
-          "Tháng 4",
-          "Tháng 5",
-          "Tháng 6",
-          "Tháng 7",
-        ],
-      },
-    },
-    series: [
-      {
-        name: "Doanh thu",
-        data: doanhthu,
-        // data: [30, 40, 45, 50, 49],
-      },
-      // {
-      //   name: "People Died",
-      //   data: [3, 60, 35, 80, 49, 70, 20, 81],
-      // },
-    ],
-  });
-
   const latestOrders = orderState?.slice(-5);
-  console.log("lastest...", latestOrders);
   return (
     <div className="row">
       <div className="col-sm-2" style={{ padding: 0 }}>
@@ -113,7 +59,7 @@ export default function HomePage() {
                   navigate("/");
                 }}
               >
-                Thoát
+                Đăng xuất
               </Button>
             </h5>
           </div>
@@ -174,7 +120,9 @@ export default function HomePage() {
                       </td>
                       <td>{item?.MAKH}</td>
                       <td>{item?.TENKH}</td>
-                      <td>{item?.NGAYLAP_HD}</td>
+                      <td>
+                        {format(new Date(item?.NGAYLAP_HD), "dd/MM/yyyy")}
+                      </td>
                       <td>{item?.PHONE}</td>
                       <td>{currencyFormat(item?.TONGTIEN)}</td>
                       <td>

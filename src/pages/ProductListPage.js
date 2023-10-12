@@ -71,7 +71,6 @@ export default function ProductListPage() {
       console.log("Lỗi", error);
     }
   };
-  console.log("product,,,,", productState);
 
   const options = [
     { value: "1", label: "Áo đội tuyển" },
@@ -109,7 +108,6 @@ export default function ProductListPage() {
   useEffect(() => {
     if (editProductData && !isLoadingDetail) {
       // Do something with editProductData here
-      console.log("editProductData updated", editProductData);
       // Khai báo các xử lý cần thực hiện sau khi cập nhật editProductData ở đây
     }
   }, [editProductData, isLoadingDetail]);
@@ -139,14 +137,12 @@ export default function ProductListPage() {
   const handleChangeSearch = (e) => {
     const query = e.target.value;
     var searchList = [...productState];
-    console.log("seacrh", searchList);
 
     searchList = searchList?.filter((item) => {
       return item?.TENSP.toLowerCase().indexOf(query.toLowerCase()) !== -1;
     });
     setSearch(searchList);
     setShow(true);
-    console.log("seacrh", searchList);
   };
   function getFilterList() {
     if (!filterproduct) {
@@ -375,21 +371,6 @@ export default function ProductListPage() {
                       />
                     </Row>
                     <Row className="form-group">
-                      <label htmlFor="LOAISP">Giá bán:</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="LOAISP"
-                        value={editProductData.GIABAN}
-                        onChange={(e) =>
-                          setEditProductData({
-                            ...editProductData,
-                            GIABAN: e.target.value,
-                          })
-                        }
-                      />
-                    </Row>
-                    <Row className="form-group">
                       <label htmlFor="LOAISP">Kích cỡ:</label>
                       <input
                         type="text"
@@ -404,22 +385,49 @@ export default function ProductListPage() {
                         }
                       />
                     </Row>
+                    <Row className="form-group">
+                      <label htmlFor="LOAISP">Giá bán:</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="LOAISP"
+                        value={editProductData.GIABAN}
+                        onChange={(e) =>
+                          setEditProductData({
+                            ...editProductData,
+                            GIABAN: e.target.value,
+                          })
+                        }
+                      />
+                    </Row>
                   </Col>
                 </Row>
-                <Button
-                  type="button"
-                  className="btn btn-success mt-3"
-                  onClick={() => handleSubmitEdit(editProductData?.MASP)}
+                <Row
+                  style={{ display: "flex", justifyContent: "space-around" }}
                 >
-                  <FontAwesomeIcon icon={faSave} /> Lưu thông tin
-                </Button>
-                <Button
-                  type="button"
-                  className="btn btn-danger mt-3 ml-3"
-                  onClick={handleClose}
-                >
-                  &times; Hủy
-                </Button>
+                  <Button
+                    type="button"
+                    className="btn  mt-3"
+                    style={{
+                      width: "30%",
+                      backgroundColor: "#015c92",
+                    }}
+                    onClick={() => handleSubmitEdit(editProductData?.MASP)}
+                  >
+                    Lưu thông tin
+                  </Button>
+                  <Button
+                    type="button"
+                    className="btn  mt-3 ml-3"
+                    style={{
+                      width: "30%",
+                      backgroundColor: "#015c92",
+                    }}
+                    onClick={handleClose}
+                  >
+                    Hủy
+                  </Button>
+                </Row>
                 {/* Thêm các trường thông tin sản phẩm khác tương tự */}
               </form>
             )}
@@ -482,20 +490,30 @@ export default function ProductListPage() {
                   />
                 </Col>
               </Row>
-              <Button
-                type="button"
-                className="btn btn-success mt-3"
-                onClick={handleSubmit}
-              >
-                <FontAwesomeIcon icon={faSave} /> Lưu thông tin
-              </Button>
-              <Button
-                type="button"
-                className="btn btn-danger mt-3 ml-3"
-                onClick={handleClose}
-              >
-                &times; Hủy
-              </Button>
+              <Row style={{ display: "flex", justifyContent: "space-around" }}>
+                <Button
+                  type="button"
+                  className="btn btn-primary mt-3"
+                  onClick={handleSubmit}
+                  style={{
+                    width: "30%",
+                    backgroundColor: "#015c92",
+                  }}
+                >
+                  Lưu thông tin
+                </Button>
+                <Button
+                  type="button"
+                  className="btn btn-secondary mt-3 ml-3"
+                  style={{
+                    width: "30%",
+                    backgroundColor: "#015c92",
+                  }}
+                  onClick={handleClose}
+                >
+                  Hủy
+                </Button>
+              </Row>
             </form>
           </ModalBody>
         </Modal>
@@ -574,7 +592,7 @@ export default function ProductListPage() {
                       <th scope="col">Loại sản phẩm</th>
                       <th scope="col">Kích cỡ</th>
                       <th scope="col">Giá</th>
-                      {/* <th scope="col">Xem thêm</th> */}
+                      <th scope="col">Giảm giá</th>
                       <th scope="col">Thao tác</th>
                     </tr>
                   </thead>
@@ -586,17 +604,17 @@ export default function ProductListPage() {
                           <td>
                             <img
                               src={item?.IMAGE}
-                              style={{ height: "50px", width: "50px" }}
+                              style={{ height: "70px", width: "70px" }}
                             />
                           </td>
                           <td>{item?.MASP}</td>
                           <td>{item?.TENSP}</td>
-                          {/* <td>{item?.LOAISP}</td> */}
                           <td>
                             <TypeProduct item={item?.LOAISP} />
                           </td>
                           <td>{item?.KICHCO}</td>
                           <td>{currencyFormat(item?.GIABAN)}</td>
+                          <td>{item?.DISCOUNT}%</td>
                           <td>
                             <button
                               type="button"

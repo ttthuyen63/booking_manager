@@ -20,6 +20,8 @@ import {
   ModalBody,
 } from "reactstrap";
 import Typeproduct from "../components/TypeProduct";
+import { format } from "date-fns";
+
 export default function OrderPage() {
   const [orderState, setorderState] = useState(null);
   const [orderDetail, setorderDetail] = useState(null);
@@ -33,7 +35,6 @@ export default function OrderPage() {
   const [isLoading, setisLoading] = useState(true);
   const [isLoadingDetail, setIsLoadingDetail] = useState(false);
 
-  console.log("orderState...", orderState);
   const orderList = useSelector((state) => state.orderReducer);
 
   const queryParams = new URLSearchParams(window.location.search);
@@ -45,7 +46,6 @@ export default function OrderPage() {
     try {
       const response = await customAxios.get("/Product/GetBill/getAllBill.php");
       setorderState(response?.data?.result);
-      console.log("orderState", orderState);
     } catch (error) {
       console.error(error);
     }
@@ -59,7 +59,6 @@ export default function OrderPage() {
       setorderDetail(response?.data?.result);
       setmodelDetail(true);
       setIsLoadingDetail(false);
-      console.log("orderDetail[0]", orderDetail[0]);
     } catch (error) {
       console.error(error);
       setIsLoadingDetail(false);
@@ -71,7 +70,6 @@ export default function OrderPage() {
   useEffect(() => {
     if (orderDetail && !isLoadingDetail) {
       // Do something with editProductData here
-      console.log("editProductData updated", orderDetail);
       // Khai báo các xử lý cần thực hiện sau khi cập nhật editProductData ở đây
     }
   }, [orderDetail, isLoadingDetail]);
@@ -86,8 +84,8 @@ export default function OrderPage() {
         "/Product/GetBill/updateStatusBill.php",
         formData
       );
+      window.location.reload();
       setorderDetail();
-      console.log(JSON.stringify(response.data));
     } catch (error) {
       console.error(error);
     }
@@ -102,17 +100,14 @@ export default function OrderPage() {
         "/Product/GetBill/updateStatusBill.php",
         formData
       );
+      window.location.reload();
       setorderDetail();
-      console.log(JSON.stringify(response.data));
     } catch (error) {
       console.error(error);
     }
   };
 
-  console.log("test", orderState);
-
   const handleEdit = (item) => {
-    console.log("item...", item);
     navigate("/editorder/" + item?.id, {
       state: item,
     });
@@ -125,16 +120,6 @@ export default function OrderPage() {
   const handleClickDelete = (id) => {
     setdeleteCode(id);
     setshowDel(true);
-  };
-
-  const handleDelete = async () => {
-    try {
-      await customAxios.delete(`/booking?id=${deleteCode}`);
-      getorderApi();
-    } catch (error) {
-      console.log("Lỗi", error);
-    }
-    setshowDel(false);
   };
 
   const handleChangeSearch = (e) => {
@@ -175,62 +160,6 @@ export default function OrderPage() {
 
   return (
     <div>
-      {show === false ? (
-        <div>
-          {orderState?.map((item, index) => (
-            <Modal show={showDel} onHide={handleClose}>
-              <Modal.Header closeButton>
-                <Modal.Title>Bạn có chắc là sẽ xóa?</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                Hành động này sẽ xóa dữ liệu vĩnh viễn, bạn hãy chắc chắn là sẽ
-                muốn xóa.
-              </Modal.Body>
-              <Modal.Footer>
-                <Button
-                  variant="danger"
-                  // onClick={() => handleDelete(item?.id)
-                  onClick={handleDelete}
-                  // }
-                >
-                  Xóa
-                </Button>
-                <Button variant="primary" onClick={handleClose}>
-                  Hủy
-                </Button>
-              </Modal.Footer>
-            </Modal>
-          ))}
-        </div>
-      ) : (
-        <div>
-          {search?.map((item, index) => (
-            <Modal show={showDel} onHide={handleClose}>
-              <Modal.Header closeButton>
-                <Modal.Title>Bạn có chắc là sẽ xóa?</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                Hành động này sẽ xóa dữ liệu vĩnh viễn, bạn hãy chắc chắn là sẽ
-                muốn xóa.
-              </Modal.Body>
-              <Modal.Footer>
-                {/* <Button variant="danger" onClick={() => handleDelete(item?.id)}> */}
-                <Button
-                  variant="danger"
-                  // onClick={() => handleDelete(item?.id)
-                  onClick={handleDelete}
-                  // }
-                >
-                  Xóa
-                </Button>
-                <Button variant="primary" onClick={handleClose}>
-                  Hủy
-                </Button>
-              </Modal.Footer>
-            </Modal>
-          ))}
-        </div>
-      )}
       <div>
         <Modal
           size="lg"
@@ -263,7 +192,11 @@ export default function OrderPage() {
                     </Col>
                     <Col lg={6}>
                       <Row className="form-group">
-                        Ngày mua hàng: {orderDetail[0]?.NGAYLAP_HD}
+                        Ngày mua hàng:{" "}
+                        {format(
+                          new Date(orderDetail[0]?.NGAYLAP_HD),
+                          "dd/MM/yyyy"
+                        )}
                       </Row>
                       <Row className="form-group">
                         Ghi chú: {orderDetail[0]?.NOTE}
@@ -310,6 +243,9 @@ export default function OrderPage() {
                           ))}
                         </tbody>
                       </table>
+                    </Col>
+                    <Col>
+                      Trạng thái: <StatusBill item={orderDetail[0]?.STATUS} />
                     </Col>
                   </Row>
                 </form>
@@ -384,21 +320,20 @@ export default function OrderPage() {
                           </td>
                           <td>{item?.MAKH}</td>
                           <td>{item?.TENKH}</td>
-                          <td>{item?.NGAYLAP_HD}</td>
+                          <td>
+                            {format(new Date(item?.NGAYLAP_HD), "dd/MM/yyyy")}
+                          </td>
                           <td>{item?.PHONE}</td>
                           <td>{currencyFormat(item?.TONGTIEN)}</td>
-                          {/* <td>{item?.start_date}</td> */}
-                          {/* <td>{item?.STATUS}</td> */}
                           <td>
                             <StatusBill item={item?.STATUS} />
                           </td>
                           <td>
-                            {item?.STATUS == "0" || item?.STATUS == 2 ? (
+                            {item?.STATUS == 0 ? (
                               <button
                                 type="button"
-                                className="btn btn-xs"
+                                className="btn btn-secondary btn-xs"
                                 data-toggle="modal"
-                                // data-target="#delModal"
                                 onClick={() => handleConfirmBill(item?.MAHD)}
                               >
                                 <span
@@ -413,7 +348,7 @@ export default function OrderPage() {
                             ) : (
                               <button
                                 type="button"
-                                className="btn btn-xs"
+                                className="btn btn-secondary btn-xs"
                                 data-toggle="modal"
                                 disabled
                                 // data-target="#delModal"
@@ -431,13 +366,11 @@ export default function OrderPage() {
                             )}
                           </td>
                           <td>
-                            {item?.STATUS == 2 ? (
+                            {item?.STATUS === 0 ? (
                               <button
                                 type="button"
-                                className="btn btn-xs"
-                                // data-toggle="modal"
-                                disabled
-                                // data-target="#delModal"
+                                className="btn btn-secondary btn-xs"
+                                // disabled
                                 onClick={() => handleRefuseBill(item?.MAHD)}
                               >
                                 <span
@@ -452,10 +385,10 @@ export default function OrderPage() {
                             ) : (
                               <button
                                 type="button"
-                                className="btn btn-xs"
-                                // data-toggle="modal"
+                                className="btn btn-secondary btn-xs"
+                                data-toggle="modal"
                                 disabled
-                                // data-target="#delModal"
+                                data-target="#delModal"
                                 onClick={() => handleRefuseBill(item?.MAHD)}
                               >
                                 <span
@@ -504,21 +437,20 @@ export default function OrderPage() {
                           </td>
                           <td>{item?.MAKH}</td>
                           <td>{item?.TENKH}</td>
-                          <td>{item?.NGAYLAP_HD}</td>
+                          <td>
+                            {format(new Date(item?.NGAYLAP_HD), "dd/MM/yyyy")}
+                          </td>
                           <td>{item?.PHONE}</td>
                           <td>{currencyFormat(item?.TONGTIEN)}</td>
-                          {/* <td>{item?.start_date}</td> */}
-                          {/* <td>{item?.STATUS}</td> */}
                           <td>
                             <StatusBill item={item?.STATUS} />
                           </td>
                           <td>
-                            {item?.STATUS == "0" || item?.STATUS == 2 ? (
+                            {item?.STATUS == 0 ? (
                               <button
                                 type="button"
-                                className="btn btn-xs"
+                                className="btn btn-secondary btn-xs"
                                 data-toggle="modal"
-                                // data-target="#delModal"
                                 onClick={() => handleConfirmBill(item?.MAHD)}
                               >
                                 <span
@@ -533,7 +465,7 @@ export default function OrderPage() {
                             ) : (
                               <button
                                 type="button"
-                                className="btn btn-xs"
+                                className="btn btn-secondary btn-xs"
                                 data-toggle="modal"
                                 disabled
                                 // data-target="#delModal"
@@ -551,13 +483,11 @@ export default function OrderPage() {
                             )}
                           </td>
                           <td>
-                            {item?.STATUS == 2 ? (
+                            {item?.STATUS === 0 ? (
                               <button
                                 type="button"
-                                className="btn btn-xs"
-                                // data-toggle="modal"
-                                disabled
-                                // data-target="#delModal"
+                                className="btn btn-secondary btn-xs"
+                                // disabled
                                 onClick={() => handleRefuseBill(item?.MAHD)}
                               >
                                 <span
@@ -572,10 +502,10 @@ export default function OrderPage() {
                             ) : (
                               <button
                                 type="button"
-                                className="btn btn-xs"
-                                // data-toggle="modal"
+                                className="btn btn-secondary btn-xs"
+                                data-toggle="modal"
                                 disabled
-                                // data-target="#delModal"
+                                data-target="#delModal"
                                 onClick={() => handleRefuseBill(item?.MAHD)}
                               >
                                 <span

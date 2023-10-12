@@ -47,7 +47,6 @@ export default function UserListPage() {
   const [phanloai, setphanloai] = useState();
   const [phanloaiData, setphanloaiData] = useState();
 
-  console.log("userState...", userState);
   const userList = useSelector((state) => state.userReducer);
 
   const queryParams = new URLSearchParams(window.location.search);
@@ -75,7 +74,6 @@ export default function UserListPage() {
       );
       dispatch(addListuser(response?.data));
       setuserState(response?.data?.data);
-      console.log(userState);
     } catch (error) {
       console.log(error);
     } finally {
@@ -93,7 +91,6 @@ export default function UserListPage() {
   };
 
   const handleDelete = async () => {
-    // console.log("id: ", deleteId);
     try {
       await customAxios.delete(`/user?id=${deleteCode}`);
       getuserApi();
@@ -101,10 +98,6 @@ export default function UserListPage() {
       console.log("Lỗi", error);
     }
     setshowDel(false);
-  };
-
-  const goToDetail = (code) => {
-    navigate("/userDetail/" + code);
   };
 
   const handleChangeSearch = (e) => {
@@ -135,51 +128,6 @@ export default function UserListPage() {
   }
 
   const navigate = useNavigate();
-
-  const uploader = new Uploader({
-    // Get production API keys from Upload.io
-    apiKey: "free",
-  });
-
-  const spanStyle = {
-    padding: "20px",
-    background: "#efefef",
-    color: "#000000",
-  };
-
-  const divStyle = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundSize: "cover",
-    height: "400px",
-  };
-
-  const handleChangeHotelName = (e) => {
-    sethotelNameData(e);
-  };
-
-  const handleChangePhanLoai = (e) => {
-    setphanloaiData(e);
-  };
-
-  const [randomNumber, setRandomNumber] = useState(null);
-  const [generatedNumbers, setGeneratedNumbers] = useState([]);
-
-  const generateRandomNumber = () => {
-    let newNumber;
-    do {
-      newNumber = Math.floor(Math.random() * 100) + 1; // Sinh số ngẫu nhiên từ 1 đến 100
-    } while (generatedNumbers.includes(newNumber)); // Kiểm tra tính duy nhất của số mới
-
-    setRandomNumber(newNumber);
-    setGeneratedNumbers([...generatedNumbers, newNumber]);
-  };
-
-  const handleAdd = () => {
-    setmodal(true);
-    generateRandomNumber();
-  };
 
   return (
     <div>
